@@ -1,0 +1,151 @@
+body {
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    font-size: 2.5em;
+    margin-bottom: 40px;
+}
+
+.setup-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.player-count-selector {
+    margin-bottom: 20px;
+}
+
+.count-button {
+    padding: 10px 30px;
+    margin: 0 10px;
+    border: 2px solid #1e3c72;
+    background: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: 0.3s;
+}
+
+.count-button.active {
+    background: #1e3c72;
+    color: white;
+}
+
+.player-inputs {
+    display: none;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.player-inputs.show {
+    display: block;
+}
+
+.player-input {
+    margin-bottom: 10px;
+}
+
+.player-input input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.tournament-container {
+    display: none;
+}
+
+.tournament-container.show {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.bracket {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 20px;
+}
+
+.round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 200px;
+}
+
+.match-pair {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin: 20px 0;
+}
+
+.player {
+    background: white;
+    padding: 10px 20px;
+    margin: 5px 0;
+    border-radius: 25px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+.connector {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    width: 20px;
+    height: 2px;
+    background: white;
+}
+
+.vertical-connector {
+    position: absolute;
+    right: -20px;
+    top: 25%;
+    width: 2px;
+    height: 50%;
+    background: white;
+}
+
+.start-button, .generate-bracket-button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+    transition: 0.3s;
+}
+
+.start-button:hover, .generate-bracket-button:hover {
+    background: #388E3C;
+}
+
+.error-message {
+    color: #f44336;
+    margin-top: 10px;
+    display: none;
+}

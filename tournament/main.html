@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tournament Bracket</title>
+    <link rel="stylesheet" href="./trnmtStyle.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tournament</h1>
+        
+        <div class="setup-section">
+            <h2>Select Number of Players</h2>
+            <div class="player-count-selector">
+                <button class="count-button" data-count="4">4 Players</button>
+                <button class="count-button" data-count="8">8 Players</button>
+            </div>
+
+            <div class="player-inputs">
+                <div id="players-container"></div>
+                <div class="error-message">Please fill in all player names</div>
+                <button class="generate-bracket-button">Generate Tournament Bracket</button>
+            </div>
+        </div>
+
+        <div class="tournament-container">
+            <div class="bracket" id="tournament-bracket">
+                <!-- Bracket will be generated here -->
+            </div>
+        </div>
+
+        <button class="start-button" style="display: none;">Start Tournament ></button>
+    </div>
+
+   <script src="./trnmntLogic.js"></script>c
+</body>
+</html>

@@ -1,0 +1,66 @@
+.arena {
+    border-radius: 25px;
+    background-color: aquamarine;
+    width: 800px; /* Fixed width */
+    height: 500px; /* Fixed height */
+    border: 6px solid black;
+    position: relative;
+    margin: 20px auto; /* Center horizontally with some space at the top */
+}
+
+.half-line {
+    position: absolute;
+    left: calc(50% - 1px);
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background-color: black;
+}
+
+.player {
+    border-radius: 25px;
+    position: absolute;
+    top: calc(50% - 100px);
+    left: 0;
+    width: 20px;
+    height: 200px;
+    background-color: black;
+}
+
+.computer {
+    border-radius: 25px;
+    position: absolute;
+    top: calc(50% - 100px);
+    right: 0;
+    width: 20px;
+    height: 200px;
+    background-color: rgb(115, 114, 114);
+}
+
+.ball {
+    position: absolute;
+    top: calc(50% - 10px);
+    left: calc(50% - 10px);
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+.Score {
+    font-size: 50px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.Score computer {
+    display: inline-block;
+    margin-right: 40px;
+    color: rgb(240, 31, 31);
+}
+
+.Score player {
+    display: inline-block;
+    margin-left: 40px;
+    color: rgb(240, 219, 31);
+}
