@@ -158,123 +158,14 @@ function generateBracket() {
 let i = 0;
 
 
-document.querySelector('.start-button').addEventListener('click', async function() {
-    if (!tournamentState || !tournamentState.matches) {
-        console.error('Tournament state not initialized');
-        return;
-    }
-
+document.querySelector('.start-button').addEventListener('click', function() {
     const currentMatch = tournamentState.matches.find(match => match.winner === null);
     if (currentMatch) {
-        localStorage.setItem('currentMatch', JSON.stringify({
-            player1: currentMatch.player1,
-            player2: currentMatch.player2,
-            roundNumber: currentMatch.roundNumber
-        }));
+        // Store current match info
+        localStorage.setItem('currentMatch', JSON.stringify(currentMatch));
         
-        try {
-            // Store current tournament page state
-            const tournamentState = {
-                html: document.body.innerHTML,
-                styles: Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
-                    .map(link => ({
-                        href: link.href,
-                        id: link.id
-                    }))
-            };
-            localStorage.setItem('tournamentPageState', JSON.stringify(tournamentState));
-
-            // Load game resources
-            const [htmlResponse, cssResponse, scriptResponse] = await Promise.all([
-                fetch('../game/game.html'),
-                fetch('../game/style.css'),
-                fetch('../game/script.js')
-            ]);
-
-            const [gameHTML, gameCSS, gameScript] = await Promise.all([
-                htmlResponse.text(),
-                cssResponse.text(),
-                scriptResponse.text()
-            ]);
-
-            // Clean up everything from the current page
-            // Remove all scripts
-            document.querySelectorAll('script').forEach(script => script.remove());
-            
-            // Remove all stylesheets
-            document.querySelectorAll('link[rel="stylesheet"], style').forEach(style => style.remove());
-            
-            // Clear the body
-            document.body.innerHTML = '';
-            
-            // Clear the head (except meta tags)
-            Array.from(document.head.children).forEach(child => {
-                if (child.tagName !== 'META') {
-                    child.remove();
-                }
-            });
-
-            // Add new game CSS
-            // const styleElement = document.createElement('style');
-            // styleElement.id = 'game-styles';
-            // styleElement.textContent = gameCSS;
-            // document.head.appendChild(styleElement);
-
-            // Add new game HTML
-            document.body.innerHTML = gameHTML;
-
-            // Add new game script
-            // const scriptElement = document.createElement('script');
-            // scriptElement.id = 'game-script';
-            // scriptElement.textContent = gameScript;
-            // document.body.appendChild(scriptElement);
-
-            // Add return button handler
-            document.getElementById('finishGame').addEventListener('click', () => {
-                // Store match result before cleanup
-                const matchResult = localStorage.getItem('matchResult');
-
-                // Clean up everything again
-                document.querySelectorAll('script').forEach(script => script.remove());
-                document.querySelectorAll('link[rel="stylesheet"], style').forEach(style => style.remove());
-                document.body.innerHTML = '';
-                Array.from(document.head.children).forEach(child => {
-                    if (child.tagName !== 'META') {
-                        child.remove();
-                    }
-                });
-
-                // Restore tournament page state
-                const savedState = JSON.parse(localStorage.getItem('tournamentPageState'));
-                
-                // Restore HTML
-                document.body.innerHTML = savedState.html;
-
-                // Restore styles
-                savedState.styles.forEach(style => {
-                    const link = document.createElement('link');
-                    link.rel = 'stylesheet';
-                    link.href = style.href;
-                    if (style.id) link.id = style.id;
-                    document.head.appendChild(link);
-                });
-
-                // Process match results
-                if (matchResult) {
-                    updateTournamentProgress(JSON.parse(matchResult));
-                    localStorage.removeItem('matchResult');
-                }
-
-                // Clean up stored state
-                localStorage.removeItem('tournamentPageState');
-
-                // Reattach event listeners
-                reattachEventListeners();
-            });
-
-        } catch (error) {
-            console.error('Error loading game:', error);
-        }
+        // Instead of changing location, load game content
+        loadGameContent();
     }
 });
 
@@ -339,4 +230,161 @@ function setupNextRound() {
     
     // Update bracket display
     updateBracketDisplay();
+}
+
+function updateTournamentProgress(matchResult) {
+    // Find and update the current match
+    const currentMatch = tournamentState.matches.find(match => 
+        match.player1 === currentMatch.player1 && 
+        match.player2 === currentMatch.player2 &&
+        match.winner === null
+    );
+
+    if (currentMatch) {
+        currentMatch.winner = matchResult.winner;
+        currentMatch.score = matchResult.score;
+        
+        // Check if round is complete
+        if (isRoundComplete()) {
+            setupNextRound();
+        }
+        
+        // Save updated tournament state
+        localStorage.setItem('tournamentState', JSON.stringify(tournamentState));
+        
+        // Update bracket display
+        updateBracketDisplay();
+    }
+}
+
+function updateBracketDisplay() {
+    const bracket = document.getElementById('tournament-bracket');
+    bracket.innerHTML = ''; // Clear existing bracket
+
+    // Group matches by round
+    const matchesByRound = {};
+    tournamentState.matches.forEach(match => {
+        if (!matchesByRound[match.roundNumber]) {
+            matchesByRound[match.roundNumber] = [];
+        }
+        matchesByRound[match.roundNumber].push(match);
+    });
+
+    // Create rounds
+    Object.keys(matchesByRound).forEach(roundNum => {
+        const round = document.createElement('div');
+        round.className = 'round';
+        
+        matchesByRound[roundNum].forEach(match => {
+            const matchPair = document.createElement('div');
+            matchPair.className = 'match-pair';
+            matchPair.innerHTML = `
+                <div class="player ${match.winner === match.player1 ? 'winner' : ''}">
+                    <span class="player-name">${match.player1}</span>
+                    ${match.score ? `<span class="score">${match.score.split('-')[0]}</span>` : ''}
+                </div>
+                <div class="player ${match.winner === match.player2 ? 'winner' : ''}">
+                    <span class="player-name">${match.player2}</span>
+                    ${match.score ? `<span class="score">${match.score.split('-')[1]}</span>` : ''}
+                </div>
+            `;
+            round.appendChild(matchPair);
+        });
+        
+        bracket.appendChild(round);
+    });
+}
+
+// Add this to handle return from game
+window.addEventListener('load', () => {
+    const matchResult = localStorage.getItem('matchResult');
+    if (matchResult) {
+        updateTournamentProgress(JSON.parse(matchResult));
+        localStorage.removeItem('matchResult');
+    }
+});
+
+// Add these new functions for SPA navigation
+async function loadGameContent() {
+    try {
+        // Fetch game HTML
+        const response = await fetch('../game/game.html');
+        const html = await response.text();
+        
+        // Create temporary container to parse HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Extract game content
+        const gameContent = doc.querySelector('.container').innerHTML;
+        
+        // Update main container
+        const container = document.querySelector('.container');
+        container.innerHTML = gameContent;
+        
+        // Add game styles if not already present
+        if (!document.querySelector('link[href="../game/style.css"]')) {
+            const gameStyles = document.createElement('link');
+            gameStyles.rel = 'stylesheet';
+            gameStyles.href = '../game/style.css';
+            document.head.appendChild(gameStyles);
+        }
+        
+        // Load game script
+        await new Promise((resolve, reject) => {
+            const gameScript = document.createElement('script');
+            gameScript.src = '../game/script.js';
+            gameScript.onload = resolve;
+            gameScript.onerror = reject;
+            document.body.appendChild(gameScript);
+        });
+        
+        // Initialize game
+        if (window.initializeGame) {
+            window.initializeGame();
+        } else {
+            console.error('Game initialization function not found');
+        }
+        
+    } catch (error) {
+        console.error('Error loading game content:', error);
+    }
+}
+
+async function loadTournamentContent() {
+    try {
+        // Fetch tournament HTML
+        const response = await fetch('./tournament/main.html');
+        const html = await response.text();
+        
+        // Parse HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Extract tournament content
+        const tournamentContent = doc.querySelector('.container').innerHTML;
+        
+        // Update container
+        document.querySelector('.container').innerHTML = tournamentContent;
+        
+        // Reinitialize tournament state
+        initializeTournament();
+        
+    } catch (error) {
+        console.error('Error loading tournament content:', error);
+        location.reload(); // Fallback to page reload if loading fails
+    }
+}
+
+// Add this function to initialize tournament state
+function initializeTournament() {
+    // Reattach event listeners
+    reattachEventListeners();
+    
+    // Load saved tournament state if it exists
+    const savedState = localStorage.getItem('tournamentState');
+    if (savedState) {
+        tournamentState = JSON.parse(savedState);
+        updateBracketDisplay();
+    }
 }
