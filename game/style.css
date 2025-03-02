@@ -1,40 +1,113 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #153050, #3bb1f4, #153050, #153050, #153050, #3bb1f4, #153050);
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Game Header */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.player-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+    min-width: 200px;
+}
+
+.p1 {
+    background: linear-gradient(272deg, rgba(255, 255, 255, 0.05), #c70082a1);
+    box-shadow: 0 4px 15px rgba(199, 0, 130, 0.2);
+}
+
+.p2 {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), #032a6ceb);
+    box-shadow: 0 4px 15px rgba(3, 42, 108, 0.2);
+}
+
+.score-display {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.score {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.score .separator {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Arena Styling */
 .arena {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     border-radius: 25px;
-    background-color: aquamarine;
-    width: 800px; /* Fixed width */
-    height: 500px; /* Fixed height */
-    border: 6px solid black;
+    width: 800px;
+    height: 500px;
     position: relative;
-    margin: 20px auto; /* Center horizontally with some space at the top */
+    margin: 2rem auto;
+    overflow: hidden;
 }
 
 .half-line {
     position: absolute;
-    left: calc(50% - 1px);
+    left: 50%;
     top: 0;
-    width: 1px;
+    width: 2px;
     height: 100%;
-    background-color: black;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .player {
-    border-radius: 25px;
     position: absolute;
     top: calc(50% - 100px);
-    left: 0;
+    left: 20px;
     width: 20px;
     height: 200px;
-    background-color: black;
-}
-
-.computer {
+    background: #c70082a1;
     border-radius: 25px;
-    position: absolute;
-    top: calc(50% - 100px);
-    right: 0;
-    width: 20px;
-    height: 200px;
-    background-color: rgb(115, 114, 114);
+    box-shadow: 0 0 20px rgba(199, 0, 130, 0.3);
 }
 
 .ball {
@@ -43,24 +116,60 @@
     left: calc(50% - 10px);
     width: 20px;
     height: 20px;
-    background-color: black;
+    background: #fff;
     border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
-.Score {
-    font-size: 50px;
-    text-align: center;
-    margin-top: 10px;
+/* Return Button */
+.return-button {
+    background: linear-gradient(45deg, #c70082a1 0%, #032a6ceb 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem auto;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(199, 0, 130, 0.2);
+    transition: all 0.3s ease;
 }
 
-.Score computer {
-    display: inline-block;
-    margin-right: 40px;
-    color: rgb(240, 31, 31);
+.return-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(199, 0, 130, 0.3);
 }
 
-.Score player {
-    display: inline-block;
-    margin-left: 40px;
-    color: rgb(240, 219, 31);
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .arena {
+        width: 100%;
+        max-width: 800px;
+        height: 400px;
+    }
+
+    .game-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .player-card {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .arena {
+        height: 300px;
+    }
+
+    .player {
+        height: 150px;
+        top: calc(50% - 75px);
+    }
 }

@@ -1,55 +1,95 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
-    padding: 20px;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #153050, #3bb1f4, #153050, #153050, #153050, #3bb1f4, #153050);
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 2rem;
 }
 
-h1 {
+/* Hero Section */
+.hero-section {
     text-align: center;
-    color: white;
-    font-size: 2.5em;
-    margin-bottom: 40px;
+    margin-bottom: 4rem;
 }
 
+.hero-section h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+}
+
+.hero-section .highlight {
+    color: #ff69b4;  /* Softer pink */
+    text-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.2rem;
+}
+
+/* Setup Section */
 .setup-section {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    text-align: center;
+    background: rgba(255, 255, 255, 0.03);  /* Very subtle white overlay */
+    backdrop-filter: blur(10px);  /* Frosted glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+}
+
+.setup-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
 }
 
 .player-count-selector {
-    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
 }
 
 .count-button {
-    padding: 10px 30px;
-    margin: 0 10px;
-    border: 2px solid #1e3c72;
-    background: white;
-    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    min-width: 200px;
     cursor: pointer;
-    font-size: 1.1em;
-    transition: 0.3s;
+    transition: all 0.3s ease;
 }
 
 .count-button.active {
-    background: #1e3c72;
-    color: white;
+    background: rgba(255, 105, 180, 0.1);
+    border-color: #ff69b4;
+    box-shadow: 0 4px 20px rgba(255, 105, 180, 0.2);
 }
 
 .player-inputs {
-    display: none;
     max-width: 500px;
     margin: 0 auto;
+    display: none;
 }
 
 .player-inputs.show {
@@ -57,95 +97,374 @@ h1 {
 }
 
 .player-input {
-    margin-bottom: 10px;
+    position: relative;
+    margin-bottom: 1.5rem;
 }
 
 .player-input input {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1em;
+    padding: 1rem;
+    padding-left: 2.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
 }
 
+.player-input::before {
+    content: '\f007';
+    font-family: 'Font Awesome 6 Free';
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.player-input input:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+}
+
+/* Tournament Container */
 .tournament-container {
-    display: none;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 3rem;
+    margin-bottom: 2rem;
+    min-height: 700px;
+    position: relative;
 }
 
-.tournament-container.show {
+/* Tournament Header */
+.tournament-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 40px;
+    align-items: center;
+    margin-bottom: 4rem;
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tournament-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.tournament-status {
+    background: rgba(255, 105, 180, 0.1);
+    color: #ff69b4;
+    box-shadow: 0 2px 8px rgba(255, 105, 180, 0.1);
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* Bracket Layout */
 .bracket {
-    flex: 1;
     display: flex;
     justify-content: space-between;
-    padding-right: 20px;
+    padding: 0 2rem;
+    position: relative;
+    gap: 8rem;
+    min-height: 500px;
 }
 
+/* Round Styling */
 .round {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 200px;
+    width: 280px;
+    position: relative;
+    gap: 4rem;
 }
 
+/* Match Container */
 .match-pair {
-    display: flex;
-    flex-direction: column;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 1rem;
     position: relative;
-    margin: 20px 0;
 }
 
+/* Player Box */
 .player {
-    background: white;
-    padding: 10px 20px;
-    margin: 5px 0;
-    border-radius: 25px;
-    font-weight: bold;
-    position: relative;
-    z-index: 1;
+    background: rgba(3, 42, 108, 0.3);
+    padding: 1rem 1.2rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
 }
 
-.connector {
+.player:hover {
+    background: rgba(3, 42, 108, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Connector Lines - Horizontal */
+.match-pair::after {
+    content: '';
     position: absolute;
-    right: -20px;
+    right: -8rem; /* Match the gap between rounds */
     top: 50%;
-    width: 20px;
+    width: 8rem;
     height: 2px;
-    background: white;
+    background: linear-gradient(90deg, #ff69b4, #032a6c);
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
 }
 
-.vertical-connector {
+/* Connector Lines - Vertical */
+.round:not(:last-child) .match-pair::before {
+    content: '';
     position: absolute;
-    right: -20px;
-    top: 25%;
+    right: -8rem;
     width: 2px;
-    height: 50%;
-    background: white;
+    background: linear-gradient(90deg, #ff69b4, #032a6c);
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
 }
 
-.start-button, .generate-bracket-button {
-    background: #4CAF50;
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 25px;
-    font-size: 1.2em;
-    cursor: pointer;
-    display: block;
-    margin: 20px auto;
-    transition: 0.3s;
+/* Adjust vertical connectors for first match in pair */
+.round:not(:last-child) .match-pair:nth-child(odd)::before {
+    top: 50%;
+    height: calc(100% + 4rem); /* Matches the gap between pairs */
 }
 
-.start-button:hover, .generate-bracket-button:hover {
-    background: #388E3C;
+/* Adjust vertical connectors for second match in pair */
+.round:not(:last-child) .match-pair:nth-child(even)::before {
+    bottom: 50%;
+    height: calc(100% + 4rem);
 }
 
-.error-message {
-    color: #f44336;
-    margin-top: 10px;
+/* Hide connectors for last round */
+.round:last-child .match-pair::after,
+.round:last-child .match-pair::before {
     display: none;
 }
+
+/* Start Tournament Button */
+.start-button {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(45deg, #ff69b4 0%, #032a6c 100%);
+    color: white;
+    border: none;
+    padding: 1rem 3rem;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+}
+
+.start-button:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
+}
+
+/* Custom Scrollbar */
+.bracket::-webkit-scrollbar {
+    height: 8px;
+}
+
+.bracket::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+}
+
+.bracket::-webkit-scrollbar-thumb {
+    background: rgba(255, 105, 180, 0.2);
+    border-radius: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1400px) {
+    .bracket {
+        gap: 6rem;
+        overflow-x: auto;
+    }
+
+    .match-pair::after {
+        right: -6rem;
+        width: 6rem;
+    }
+
+    .round:not(:last-child) .match-pair::before {
+        right: -6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .tournament-container {
+        padding: 1.5rem;
+    }
+
+    .bracket {
+        padding: 1rem;
+        gap: 4rem;
+    }
+
+    .round {
+        width: 240px;
+    }
+
+    .match-pair::after {
+        right: -4rem;
+        width: 4rem;
+    }
+
+    .round:not(:last-child) .match-pair::before {
+        right: -4rem;
+    }
+}
+
+/* Progress Steps */
+.progress-steps {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    margin: 2rem 0;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.step.active {
+    color: #ff69b4;
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 105, 180, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    font-family: 'Orbitron', sans-serif;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.2);
+}
+
+.step.active .step-number {
+    background: rgba(255, 105, 180, 0.1);
+    border: 2px solid #ff69b4;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.2);
+}
+
+/* Enhanced Button Styles */
+.button-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.button-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+}
+
+.button-text span {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.button-text small {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+}
+
+.count-button:hover, .count-button.active {
+    background: rgba(255, 105, 180, 0.1);
+    border-color: #ff69b4;
+    box-shadow: 0 4px 20px rgba(255, 105, 180, 0.2);
+}
+
+.count-button i {
+    font-size: 1.5rem;
+    color: #ff69b4;
+}
+
+/* Error Message Enhancement */
+.error-message {
+    background: rgba(255, 77, 77, 0.1);
+    color: #ff4d4d;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-message.show {
+    display: flex;
+}
+
+/* Generate Bracket Button */
+.generate-bracket-button {
+    background: linear-gradient(45deg, #ff69b4 0%, #032a6c 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 2rem auto;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+}
+
+.generate-bracket-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+}
+
+/* Remove these control button styles */
+.controls,
+.control-btn {
+    display: none;
+}
+
+/* Add subtle animations */
+.match-pair, .player, .count-button, .start-button, .generate-bracket-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+
