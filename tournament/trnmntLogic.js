@@ -330,21 +330,27 @@ async function loadGameContent() {
             document.head.appendChild(gameStyles);
         }
         
+        // Wait for styles to load
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         // Load game script
         await new Promise((resolve, reject) => {
             const gameScript = document.createElement('script');
             gameScript.src = '../game/script.js';
-            gameScript.onload = resolve;
+            gameScript.onload = () => {
+                // Initialize game after script is loaded and styles are applied
+                setTimeout(() => {
+                    if (window.Game) {
+                        window.Game.init();
+                        resolve();
+                    } else {
+                        reject(new Error('Game object not found'));
+                    }
+                }, 100);
+            };
             gameScript.onerror = reject;
             document.body.appendChild(gameScript);
         });
-        
-        // Initialize game
-        if (window.initializeGame) {
-            window.initializeGame();
-        } else {
-            console.error('Game initialization function not found');
-        }
         
     } catch (error) {
         console.error('Error loading game content:', error);
@@ -353,6 +359,11 @@ async function loadGameContent() {
 
 async function loadTournamentContent() {
     try {
+        // Clean up game if it exists
+        if (window.Game) {
+            window.Game.cleanup();
+        }
+        
         // Fetch tournament HTML
         const response = await fetch('./tournament/main.html');
         const html = await response.text();
@@ -367,12 +378,17 @@ async function loadTournamentContent() {
         // Update container
         document.querySelector('.container').innerHTML = tournamentContent;
         
+        // Remove game styles if present
+        const gameStyles = document.querySelector('link[href="../game/style.css"]');
+        if (gameStyles) {
+            gameStyles.remove();
+        }
+        
         // Reinitialize tournament state
         initializeTournament();
         
     } catch (error) {
         console.error('Error loading tournament content:', error);
-        location.reload(); // Fallback to page reload if loading fails
     }
 }
 

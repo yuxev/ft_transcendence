@@ -11,7 +11,13 @@ if (!window.Game) {
             otherScore: 1,
             WINNING_SCORE: 5,
             MAX_ANGLE: 5 * Math.PI / 12,
-            angle: -Math.PI / 7
+            angle: -Math.PI / 7,
+            // Add fixed dimensions
+            ARENA_WIDTH: 800,
+            ARENA_HEIGHT: 500,
+            PADDLE_WIDTH: 20,
+            PADDLE_HEIGHT: 200,
+            BALL_SIZE: 20
         },
         
         init: function() {
@@ -79,8 +85,8 @@ if (!window.Game) {
                     }
                     this.Height = this.element.clientHeight;
                     this.Width = this.element.clientWidth;
-                    this.x = - this.element.clientWidth / 2;
-                    this.y = self.elements.arena.clientHeight / 2 - this.element.clientHeight / 2;
+                    this.x = -this.Width / 2;
+                    this.y = self.elements.arena.clientHeight / 2 - this.Height / 2;
                     this.element.style.left = `${this.x}px`;
                     this.setupControls();
                 }
@@ -124,13 +130,13 @@ if (!window.Game) {
                         }
                     });
                 }
-            };
+            }
 
             class BallObj {
                 constructor() {
                     this.Name = "ball";
-                    this.x = self.elements.arena.clientWidth / 2 - self.elements.ball.clientHeight / 2;
-                    this.y = self.elements.arena.clientHeight / 2 - self.elements.ball.clientWidth / 2;
+                    this.x = self.elements.arena.clientWidth / 2 - self.elements.ball.clientWidth / 2;
+                    this.y = self.elements.arena.clientHeight / 2 - self.elements.ball.clientHeight / 2;
                     this.speed = 4;
                     this.r = self.elements.ball.clientWidth;
                     

@@ -2,6 +2,7 @@ class Router {
     constructor(routes) {
         this.routes = routes;
         this.currentPath = window.location.pathname;
+        this.transitioning = false;
         
         // Handle browser back/forward buttons
         window.addEventListener('popstate', (e) => {
@@ -10,7 +11,7 @@ class Router {
     }
     
     async navigate(path, addToHistory = true) {
-        if (this.currentPath === path) return;
+        if (this.currentPath === path || this.transitioning) return;
         
         const route = this.routes[path];
         if (!route) {
@@ -18,17 +19,26 @@ class Router {
             return;
         }
         
-        // Cleanup previous route if needed
-        if (this.currentPath === '/game' && window.Game) {
-            window.Game.cleanup();
-        }
+        this.transitioning = true;
         
-        if (addToHistory) {
-            history.pushState(null, '', path);
+        try {
+            // Clean up previous route if needed
+            if (this.currentPath === '/game' && window.Game) {
+                window.Game.cleanup();
+            }
+            
+            if (addToHistory) {
+                history.pushState(null, '', path);
+            }
+            
+            this.currentPath = path;
+            await route.load();
+            
+        } catch (error) {
+            console.error('Navigation error:', error);
+        } finally {
+            this.transitioning = false;
         }
-        
-        this.currentPath = path;
-        await route.load();
     }
 }
 

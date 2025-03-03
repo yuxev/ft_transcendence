@@ -46,6 +46,14 @@
         </button>
     </div>
     <script src="../game/script.js"></script>
+    <script>
+        // Initialize game when loaded directly
+        window.addEventListener('load', () => {
+            if (window.Game) {
+                window.Game.init();
+            }
+        });
+    </script>
 </body>
 
 </html>
