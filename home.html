@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #153050, #3bb1f4, #153050, #153050, #153050, #3bb1f4, #153050);
+            min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
+            color: #fff;
+            padding-top: 80px; /* Add padding for fixed navbar */
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .highlight {
+            color: #ff69b4;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+        }
+
+        .custom-btn {
+            background: linear-gradient(45deg, #ff69b4 0%, #032a6c 100%);
+            border: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+        }
+
+        .custom-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.3);
+            background: linear-gradient(45deg, #ff69b4 20%, #032a6c 100%);
+        }
+
+        /* Navbar styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #ff69b4;
+        }
+
+        .player-name {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .settings i {
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            color: #fff;
+        }
+
+        .settings i:hover {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed navbar -->
+    <header>
+        <div class="user-profile">
+            <img src="assets/svgs/person-svgrepo-com.svg" alt="Player" class="avatar">
+            <span class="player-name">Player Name</span>
+        </div>
+        <div class="settings">
+            <i class="fas fa-cog"></i>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <div class="d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 80px);">
+        <div id="content">
+            <div class="container glass-container p-5 m-4" style="max-width: 800px;">
+                <div class="text-center mb-5">
+                    <h1 class="hero-title display-4 mb-3">
+                        <span class="highlight">Pong</span> Game
+                    </h1>
+                    <p class="text-white-50 fs-5">Enter the future of competitive gaming</p>
+                </div>
+
+                <button type="button"
+                    class="custom-btn btn text-white d-flex align-items-center gap-3 mx-auto px-4 py-3 rounded-pill"
+                    onclick="navigate(event, '/mainpage')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login/Register
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/router.js"></script>
+</body>
+
+</html>

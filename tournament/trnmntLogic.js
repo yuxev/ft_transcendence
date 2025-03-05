@@ -7,6 +7,16 @@ let tournamentState = {
     currentMatch: null
 };
 
+// Update start button click handler
+document.querySelector('.start-button').addEventListener('click', function() {
+    const currentMatch = tournamentState.matches.find(match => match.winner === null);
+    if (currentMatch) {
+        localStorage.setItem('currentMatch', JSON.stringify(currentMatch));
+        // Use router to navigate to game
+        router.navigate('/tournament/main.html', '/game/game.html');
+    }
+}); 
+
 // Add at the beginning of file
 window.addEventListener('load', () => {
     // Load saved tournament state if it exists
@@ -47,18 +57,12 @@ function generatePlayerInputs(count) {
     }
 }
 
-// fetch("../game/game.html")
-// .then(Response => {
-//     return Response.text();
-// })
-// .then(Data => {
-//     document.querySelector("body").innerHTML = Data;
-//     console.log(Data);
-// })
 
 document.querySelector('.generate-bracket-button').addEventListener('click', function() {
     const inputs = document.querySelectorAll('.player-name-input');
     const errorMessage = document.querySelector('.error-message');
+    const setupSection = document.querySelector('.setup-section');
+    const tournamentContainer = document.querySelector('.tournament-container');
     players = [];
 
     let allFilled = true;
@@ -70,38 +74,26 @@ document.querySelector('.generate-bracket-button').addEventListener('click', fun
     });
 
     if (!allFilled) {
-        errorMessage.style.display = 'block';
+        errorMessage.classList.add('show');
         return;
     }
-    errorMessage.style.display = 'none';
+    errorMessage.classList.remove('show');
 
     players = shuffleArray(players);
-
-    // Initialize tournament state
-    tournamentState = {
-        currentRound: 0,
-        matches: [],
-        results: {},
-        currentMatch: null
-    };
-
-    // Create initial matches
-    for (let i = 0; i < players.length; i += 2) {
-        tournamentState.matches.push({
-            player1: players[i],
-            player2: players[i + 1],
-            winner: null,
-            roundNumber: 0
-        });
-    }
-
-    // Save tournament state
-    localStorage.setItem('tournamentState', JSON.stringify(tournamentState));
-
+    initializeTournament();
     generateBracket();
-    document.querySelector('.tournament-container').classList.add('show');
-    document.querySelector('.start-button').style.display = 'block';
-    document.getElementsByClassName('setup-section')[0].remove();
+    
+    // Properly hide/show sections
+    setupSection.classList.add('hide');
+    tournamentContainer.classList.add('show');
+    document.querySelector('.start-button').style.display = 'flex';
+
+    // Update progress steps
+    document.querySelectorAll('.step').forEach((step, index) => {
+        if (index <= 1) {
+            step.classList.add('active');
+        }
+    });
 });
 
 function shuffleArray(array) {
@@ -116,90 +108,77 @@ function generateBracket() {
     const bracket = document.getElementById('tournament-bracket');
     bracket.innerHTML = '';
 
-    const round1 = document.createElement('div');
-    round1.className = 'round';
-    for (let i = 0; i < players.length; i += 2) {
-        const matchPair = document.createElement('div');
-        matchPair.className = 'match-pair';
-        matchPair.innerHTML = `
-            <div class="player">${players[i]}</div>
-            <div class="player">${players[i + 1]}</div>
-            <div class="connector"></div>
-            <div class="vertical-connector"></div>
-        `;
-        round1.appendChild(matchPair);
+    // Create rounds based on player count
+    const roundCount = Math.log2(players.length);
+    for (let i = 0; i < roundCount; i++) {
+        const round = document.createElement('div');
+        round.className = 'round';
+        
+        const matchCount = Math.pow(2, roundCount - i - 1);
+        for (let j = 0; j < matchCount; j++) {
+            const matchPair = document.createElement('div');
+            matchPair.className = 'match-pair';
+            
+            if (i === 0) {
+                // First round - fill with player names
+                const playerIndex = j * 2;
+                matchPair.innerHTML = `
+                    <div class="match-header">Match ${j + 1}</div>
+                    <div class="player">
+                        <span class="player-name">${players[playerIndex] || ''}</span>
+                        <span class="score">0</span>
+                    </div>
+                    <div class="player">
+                        <span class="player-name">${players[playerIndex + 1] || ''}</span>
+                        <span class="score">0</span>
+                    </div>
+                    <div class="match-status">Pending</div>
+                `;
+            } else {
+                // Other rounds - empty slots
+                matchPair.innerHTML = `
+                    <div class="match-header">Match ${j + 1}</div>
+                    <div class="player">
+                        <span class="player-name"></span>
+                        <span class="score"></span>
+                    </div>
+                    <div class="player">
+                        <span class="player-name"></span>
+                        <span class="score"></span>
+                    </div>
+                    <div class="match-status">Pending</div>
+                `;
+            }
+            round.appendChild(matchPair);
+        }
+        bracket.appendChild(round);
     }
-    bracket.appendChild(round1);
-
-    const semiFinals = document.createElement('div');
-    semiFinals.className = 'round';
-    for (let i = 0; i < players.length / 4; i++) {
-        const matchPair = document.createElement('div');
-        matchPair.className = 'match-pair';
-        matchPair.innerHTML = `
-            <div class="player"></div>
-            <div class="player"></div>
-            <div class="connector"></div>
-            <div class="vertical-connector"></div>
-        `;
-        semiFinals.appendChild(matchPair);
-    }
-    bracket.appendChild(semiFinals);
-
-    const finals = document.createElement('div');
-    finals.className = 'round';
-    finals.innerHTML = `
-        <div class="match-pair">
-            <div class="player"></div>
-        </div>
-    `;
-    bracket.appendChild(finals);
 }
 let i = 0;
 
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Check if user is logged in
+//     const userData = localStorage.getItem('userData');
+//     if (!userData) {
+//         window.location.href = '../usermanagment/login.html';
+//         return;
+//     }
 
-document.querySelector('.start-button').addEventListener('click', function() {
-    const currentMatch = tournamentState.matches.find(match => match.winner === null);
-    if (currentMatch) {
-        // Store current match info
-        localStorage.setItem('currentMatch', JSON.stringify(currentMatch));
-        
-        // Instead of changing location, load game content
-        loadGameContent();
-    }
-});
+//     // Initialize tournament if needed
+//     const savedState = localStorage.getItem('tournamentState');
+//     if (savedState) {
+//         tournamentState = JSON.parse(savedState);
+//         updateBracketDisplay();
+//     }
+// });
 
-function reattachEventListeners() {
-    // Player count buttons
-    document.querySelectorAll('.count-button').forEach(button => {
-        button.addEventListener('click', function() {
-            document.querySelectorAll('.count-button').forEach(btn => 
-                btn.classList.remove('active'));
-            this.classList.add('active');
-            selectedPlayerCount = parseInt(this.dataset.count);
-            generatePlayerInputs(selectedPlayerCount);
-            document.querySelector('.player-inputs').classList.add('show');
-            document.querySelector('.tournament-container').classList.remove('show');
-            document.querySelector('.start-button').style.display = 'none';
-        });
-    });
-
-    // Generate bracket button
-    const generateButton = document.querySelector('.generate-bracket-button');
-    if (generateButton) {
-        generateButton.addEventListener('click', function() {
-            // ... existing generate bracket logic ...
-        });
-    }
-
-    // Start button
-    const startButton = document.querySelector('.start-button');
-    if (startButton) {
-        startButton.addEventListener('click', async function() {
-            // ... existing start button logic ...
-        });
-    }
-}
+// document.querySelector('.start-button').addEventListener('click', function() {
+//     const currentMatch = tournamentState.matches.find(match => match.winner === null);
+//     if (currentMatch) {
+//         localStorage.setItem('currentMatch', JSON.stringify(currentMatch));
+//         window.location.href = '../game/game.html';
+//     }
+// });
 
 function isRoundComplete() {
     return tournamentState.matches.every(match => 
@@ -303,104 +282,31 @@ window.addEventListener('load', () => {
         localStorage.removeItem('matchResult');
     }
 });
-
 // Add these new functions for SPA navigation
-async function loadGameContent() {
-    try {
-        // Fetch game HTML
-        const response = await fetch('../game/game.html');
-        const html = await response.text();
-        
-        // Create temporary container to parse HTML
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        
-        // Extract game content
-        const gameContent = doc.querySelector('.container').innerHTML;
-        
-        // Update main container
-        const container = document.querySelector('.container');
-        container.innerHTML = gameContent;
-        
-        // Add game styles if not already present
-        if (!document.querySelector('link[href="../game/style.css"]')) {
-            const gameStyles = document.createElement('link');
-            gameStyles.rel = 'stylesheet';
-            gameStyles.href = '../game/style.css';
-            document.head.appendChild(gameStyles);
-        }
-        
-        // Wait for styles to load
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Load game script
-        await new Promise((resolve, reject) => {
-            const gameScript = document.createElement('script');
-            gameScript.src = '../game/script.js';
-            gameScript.onload = () => {
-                // Initialize game after script is loaded and styles are applied
-                setTimeout(() => {
-                    if (window.Game) {
-                        window.Game.init();
-                        resolve();
-                    } else {
-                        reject(new Error('Game object not found'));
-                    }
-                }, 100);
-            };
-            gameScript.onerror = reject;
-            document.body.appendChild(gameScript);
-        });
-        
-    } catch (error) {
-        console.error('Error loading game content:', error);
-    }
-}
-
-async function loadTournamentContent() {
-    try {
-        // Clean up game if it exists
-        if (window.Game) {
-            window.Game.cleanup();
-        }
-        
-        // Fetch tournament HTML
-        const response = await fetch('./tournament/main.html');
-        const html = await response.text();
-        
-        // Parse HTML
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        
-        // Extract tournament content
-        const tournamentContent = doc.querySelector('.container').innerHTML;
-        
-        // Update container
-        document.querySelector('.container').innerHTML = tournamentContent;
-        
-        // Remove game styles if present
-        const gameStyles = document.querySelector('link[href="../game/style.css"]');
-        if (gameStyles) {
-            gameStyles.remove();
-        }
-        
-        // Reinitialize tournament state
-        initializeTournament();
-        
-    } catch (error) {
-        console.error('Error loading tournament content:', error);
-    }
-}
+// loadGameContent()
+// loadTournamentContent()
 
 // Add this function to initialize tournament state
 function initializeTournament() {
-    // Reattach event listeners
-    reattachEventListeners();
-    
-    // Load saved tournament state if it exists
-    const savedState = localStorage.getItem('tournamentState');
-    if (savedState) {
-        tournamentState = JSON.parse(savedState);
-        updateBracketDisplay();
+    // Initialize tournament state
+    tournamentState = {
+        currentRound: 0,
+        matches: [],
+        results: {},
+        currentMatch: null
+    };
+
+    // Create initial matches
+    for (let i = 0; i < players.length; i += 2) {
+        tournamentState.matches.push({
+            player1: players[i],
+            player2: players[i + 1],
+            winner: null,
+            roundNumber: 0
+        });
     }
+
+    // Save tournament state
+    localStorage.setItem('tournamentState', JSON.stringify(tournamentState));
 }
+

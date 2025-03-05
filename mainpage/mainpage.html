@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PONG Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../mainpage/mainpage.css">
+</head>
+<body>
+    <header>
+        <div class="user-profile">
+            <img src="assets/default-avatar.png" alt="Player" class="avatar">
+            <span class="player-name">Player Name</span>
+        </div>
+        <div class="settings">
+            <i class="fas fa-cog"></i>
+        </div>
+    </header>
+
+    <main>
+        <div class="logo">PONG</div>
+        <div class="game-modes">
+            <div class="mode-card" onclick="navigate(event, '/game')">
+                <h2>Play</h2>
+                <span class="mode-title">1 vs 1</span>
+            </div>
+            <div class="mode-card" onclick="navigate(event, '/tournament')">
+                <h2>Play</h2>
+                <span class="mode-title">Tournament</span>
+            </div>
+        </div>
+    </main>
+
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="profile-section">
+                <div class="profile-picture">
+                    <img src="assets/default-avatar.png" alt="Profile" id="profilePreview">
+                    <label for="profileUpload" class="upload-overlay">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="profileUpload" accept="image/*" style="display: none;">
+                </div>
+            </div>
+            
+            <div class="settings-form">
+                <div class="input-group">
+                    <label>Player Name</label>
+                    <div class="input-with-edit">
+                        <input type="text" id="playerNameInput" placeholder="Player Name">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Privacy</label>
+                    <div class="input-with-edit">
+                        <input type="email" id="emailInput" placeholder="example@mail.com" readonly>
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="input-with-edit">
+                        <input type="password" id="passwordInput" placeholder="******************" readonly>
+                        <i class="fas fa-edit"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Language</label>
+                    <select id="languageSelect">
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                        <option value="es">Español</option>
+                    </select>
+                </div>
+
+                <button class="logout-btn">
+                    Log out
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../mainpage/mainpage.js"></script>
+</body>
+</html> 

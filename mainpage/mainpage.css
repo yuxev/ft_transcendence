@@ -1,0 +1,286 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #153050, #3bb1f4, #153050, #153050, #153050, #3bb1f4, #153050);
+    min-height: 100vh;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ff69b4;
+}
+
+.player-name {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+}
+
+.settings i {
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.settings i:hover {
+    transform: rotate(90deg);
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 4rem;
+    background: linear-gradient(45deg, #ff69b4, #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+}
+
+.game-modes {
+    display: flex;
+    gap: 2rem;
+}
+
+.mode-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 250px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.mode-card h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #ff69b4;
+}
+
+.mode-card .mode-title {
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .game-modes {
+        flex-direction: column;
+    }
+
+    .mode-card {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .logo {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+    }
+}
+
+/* Settings Modal */
+.settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #153050, #3bb1f4, #153050);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.settings-modal.active {
+    display: flex;
+}
+
+.settings-content {
+    width: 100%;
+    height: 100%;
+    max-width: 600px;
+    padding: 2rem;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    margin-top: 3rem;
+}
+
+.profile-picture {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+.profile-picture img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ff69b4;
+}
+
+.upload-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #ff69b4;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-overlay:hover {
+    transform: scale(1.1);
+}
+
+.settings-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.input-group {
+    margin-bottom: 2rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: 'Orbitron', sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.input-with-edit {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.input-with-edit input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.input-with-edit i {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.3s ease;
+}
+
+.input-with-edit i:hover {
+    color: #ff69b4;
+}
+
+select {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+select option {
+    background: #153050;
+    color: #fff;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #ff69b4;
+    border: none;
+    border-radius: 30px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+} 
