@@ -8,10 +8,12 @@ const API_URL = 'http://localhost:8000';
 
 // Toggle between login and register forms
 loginBtn.addEventListener('click', () => {
+    localStorage.setItem("isLoggedIn", 'true');
     container.classList.remove('active');
 });
 
 registerBtn.addEventListener('click', () => {
+    localStorage.setItem("isLoggedIn", 'true');
     container.classList.add('active');
 });
 

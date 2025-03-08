@@ -12,7 +12,6 @@ document.querySelector('.start-button').addEventListener('click', function() {
     const currentMatch = tournamentState.matches.find(match => match.winner === null);
     if (currentMatch) {
         localStorage.setItem('currentMatch', JSON.stringify(currentMatch));
-        // Use router to navigate to game
         router.navigate('/tournament/main.html', '/game/game.html');
     }
 }); 
