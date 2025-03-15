@@ -1,0 +1,514 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Tournament View Styles */
+#tournamentView {
+    padding: 20px;
+    min-height: 100vh;
+    position: relative;
+}
+
+#tournamentView .section-title {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #fff;
+}
+
+/* Progress Steps */
+#tournamentView .progress-steps {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin: 2rem 0;
+}
+
+#tournamentView .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+}
+
+#tournamentView .step.active {
+    color: #ff69b4;
+}
+
+#tournamentView .step-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    font-family: 'Orbitron', sans-serif;
+    transition: all 0.3s ease;
+}
+
+#tournamentView .step.active .step-number {
+    background: rgba(255, 105, 180, 0.2);
+    border: 2px solid #ff69b4;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.2);
+}
+
+#tournamentView .step i {
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+/* Setup Section */
+#tournamentView .setup-section {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#tournamentView .setup-section.hide {
+    display: none;
+}
+
+#tournamentView .section-header h2 {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+#tournamentView .setup-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#tournamentView .setup-card h3 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+}
+
+/* Player Count Selector */
+#tournamentView .player-count-selector {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1.5rem 0;
+}
+
+#tournamentView .count-button {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    min-width: 200px;
+}
+
+#tournamentView .count-button:hover, 
+#tournamentView .count-button.active {
+    background: rgba(255, 105, 180, 0.1);
+    border-color: #ff69b4;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.2);
+    transform: translateY(-2px);
+}
+
+#tournamentView .button-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#tournamentView .button-content i {
+    font-size: 1.5rem;
+    color: #ff69b4;
+}
+
+#tournamentView .button-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+#tournamentView .button-text span {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+#tournamentView .button-text small {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+}
+
+/* Player Inputs */
+#tournamentView .player-inputs {
+    max-width: 500px;
+    margin: 0 auto;
+    display: none;
+}
+
+#tournamentView .player-inputs.show {
+    display: block;
+}
+
+#tournamentView .player-input {
+    margin-bottom: 1rem;
+}
+
+#tournamentView .player-input input {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#tournamentView .player-input input:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
+    outline: none;
+}
+
+#tournamentView .player-input input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Error Message */
+#tournamentView .error-message {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff6b6b;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#tournamentView .error-message.show {
+    display: flex;
+}
+
+#tournamentView .error-message i {
+    color: #ff6b6b;
+}
+
+/* Generate Bracket Button */
+#tournamentView .generate-bracket-button {
+    background: linear-gradient(45deg, #ff69b4 0%, #032a6c 100%);
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1.5rem auto;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+#tournamentView .generate-bracket-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.3);
+}
+
+/* Tournament Container */
+#tournamentView .tournament-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    min-height: 600px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    display: none;
+}
+
+#tournamentView .tournament-container.show {
+    display: block;
+}
+
+#tournamentView .tournament-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+#tournamentView .tournament-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: #fff;
+}
+
+#tournamentView .tournament-status {
+    background: rgba(255, 105, 180, 0.1);
+    color: #ff69b4;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* Bracket Layout */
+#tournamentView .bracket {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    min-height: 400px;
+}
+
+#tournamentView .round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-width: 220px;
+}
+
+#tournamentView .round-label {
+    text-align: center;
+    padding: 8px 0;
+    color: #ff69b4;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+#tournamentView .match-pair {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+#tournamentView .match-header {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+#tournamentView .player {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.8rem 1rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+#tournamentView .player.winner {
+    background: rgba(255, 105, 180, 0.1);
+    border-left: 3px solid #ff69b4;
+}
+
+#tournamentView .player.tbd {
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+}
+
+#tournamentView .player-name {
+    font-weight: 500;
+}
+
+#tournamentView .score {
+    font-weight: bold;
+    color: #ff69b4;
+}
+
+#tournamentView .match-status {
+    text-align: center;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 0.5rem;
+}
+
+#tournamentView .match-status.completed {
+    color: #4cd137;
+}
+
+#tournamentView .match-status.pending {
+    color: #fbc531;
+}
+
+/* Start Button */
+#tournamentView .start-button {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(45deg, #ff69b4 0%, #032a6c 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+}
+
+#tournamentView .start-button:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.3);
+}
+
+/* Winner Announcement */
+#tournamentView .winner-announcement {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
+    z-index: 10;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -45%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+#tournamentView .winner-trophy {
+    font-size: 5rem;
+    color: #ff69b4;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+}
+
+#tournamentView .winner-announcement h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+#tournamentView .winner-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff69b4;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+}
+
+#tournamentView .winner-announcement p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+}
+
+#tournamentView .new-tournament-btn {
+    background: linear-gradient(45deg, #ff69b4 0%, #032a6c 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+#tournamentView .new-tournament-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+}
+
+/* Restart Tournament Button */
+#tournamentView .restart-tournament-btn {
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.6rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+#tournamentView .restart-tournament-btn:hover {
+    background: rgba(255, 105, 180, 0.2);
+    border-color: #ff69b4;
+    transform: translateY(-2px);
+}
+
+#tournamentView .restart-tournament-btn i {
+    font-size: 0.9rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    #tournamentView .bracket {
+        justify-content: flex-start;
+        padding-bottom: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #tournamentView .progress-steps {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    #tournamentView .player-count-selector {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #tournamentView .count-button {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    #tournamentView .tournament-container {
+        padding: 1.5rem;
+    }
+    
+    #tournamentView .winner-announcement {
+        padding: 2rem;
+    }
+} 

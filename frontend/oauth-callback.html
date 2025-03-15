@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processing 42 Login...</title>
+</head>
+<body>
+    <p>Processing login, please wait...</p>
+    <script>
+        // Get the code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        
+        if (code) {
+            // If we need to send the code back to the parent window
+            if (window.opener) {
+                window.opener.postMessage({
+                    type: '42auth',
+                    code: code
+                }, '*');
+                window.close();
+            } else {
+                // If opened directly, redirect to the main processing page
+                window.location.href = `/callback.html?code=${code}`;
+            }
+        }
+    </script>
+</body>
+</html> 

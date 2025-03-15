@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processing 42 Login...</title>
+</head>
+<body>
+    <p>Processing login, please wait...</p>
+    <script>
+        const API_URL = 'http://localhost:8000';
+        
+        // Get the authorization code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        
+        console.log('Received OAuth code:', code ? code.substring(0, 10) + '...' : 'none');
+        
+        if (code) {
+            fetch(`${API_URL}/api/oauth/42/callback`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({ code })
+            })
+            .then(response => {
+                console.log('Callback response status:', response.status);
+                if (!response.ok) {
+                    throw new Error('OAuth callback failed');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Callback response data:', data);
+                if (data.jwt) {
+                    localStorage.setItem('jwt', data.jwt);
+                    window.location.href = '/mainpage/mainpage.html';
+                } else {
+                    window.location.href = '/index.html';
+                }
+            })
+            .catch(error => {
+                console.error('Callback error:', error);
+                window.location.href = '/index.html';
+            });
+        } else {
+            console.error('No code found in URL');
+            window.location.href = '/index.html';
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Authentication</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Auth Container -->
+    <div id="authContainer" class="container">
+        <div class="form-box login">
+            <form id="loginForm" action="">
+                <h1>Login</h1>
+                <div class="input-box">
+                    <input type="text" id="login-email" name="email" placeholder="Email" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="login-password" name="password" placeholder="Password" required>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <div id="login-error" class="error-message" style="display:none; color:red; margin-top:10px;"></div>
+                <div class="ft-login">
+                    <a href="#" class="ft-btn">
+                        <img src="42_Logo.svg" alt="42 Logo">
+                        Login with 42
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-box register">
+            <form action="">
+                <h1>Registration</h1>
+                <div class="input-box">
+                    <input type="text" placeholder="Username" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="email" placeholder="Email" required>
+                    <i class='bx bxs-envelope'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password" required>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <button type="submit" class="btn">Register</button>
+                <div class="ft-login">
+                    <a href="#" class="ft-btn">
+                        <img src="42_Logo.svg" alt="42 Logo">
+                        Register with 42
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Hello, Welcome!</h1>
+                <p>Don't have an account?</p>
+                <button class="btn register-btn">Register</button>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h1>Welcome Back!</h1>
+                <p>Already have an account?</p>
+                <button class="btn login-btn">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js?v=1"></script>
+    <script>
+        // Add direct form handler after the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginDirectForm = document.getElementById('loginDirectForm');
+            if (loginDirectForm) {
+                console.log('Setting up direct login form handler');
+                loginDirectForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('Direct login form submitted');
+                    
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+                    const API_URL = 'http://localhost:8000';
+                    
+                    console.log(`Attempting login with email: ${email}`);
+                    
+                    fetch(`${API_URL}/api/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email,
+                            password
+                        }),
+                        credentials: 'include'
+                    })
+                    .then(res => {
+                        console.log(`Login response status: ${res.status}`);
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log('Login response:', data);
+                        if (data.jwt) {
+                            localStorage.setItem('jwt', data.jwt);
+                            window.location.href = '/mainpage/mainpage.html';
+                        } else {
+                            throw new Error('Login failed - no token received');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Login error:', err);
+                        const errorEl = document.getElementById('login-error');
+                        if (errorEl) {
+                            errorEl.textContent = err.message || 'Login failed';
+                            errorEl.style.display = 'block';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

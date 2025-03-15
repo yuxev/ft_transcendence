@@ -1,0 +1,32 @@
+{
+    "port": 5500,
+    "host": "localhost",
+    "root": "./",
+    "open": false,
+    "file": "index.html",
+    "wait": 1000,
+    "logLevel": 2,
+    "middleware": [
+        {
+            "route": "/game",
+            "handle": function(req, res, next) {
+                req.url = "/mainpage/mainpage.html";
+                next();
+            }
+        },
+        {
+            "route": "/tournament",
+            "handle": function(req, res, next) {
+                req.url = "/mainpage/mainpage.html";
+                next();
+            }
+        },
+        {
+            "route": "/home",
+            "handle": function(req, res, next) {
+                req.url = "/mainpage/mainpage.html";
+                next();
+            }
+        }
+    ]
+} 
