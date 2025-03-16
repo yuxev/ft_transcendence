@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="mainpage.css">
     <script src="/locales/i18n.js"></script>
+    <link id="spaceShooterStyles" rel="stylesheet" href="/space-shooter/space-shooter.css" media="none">
 
 </head>
 
@@ -417,7 +418,6 @@
                     <div class="controls-section">
                         <button class="game-btn" id="restartGameBtn">Restart Game</button>
                         <button class="game-btn" id="gameHistoryBtn">Game History</button>
-                        <button class="game-btn" id="multiplayerBtn">Local Multiplayer</button>
                     </div>
                 </div>
             </div>
@@ -428,10 +428,9 @@
 
     <script>
         window.addEventListener('beforeunload', (event) => {
-            // Perform your tracking or cleanup tasks here
             localStorage.setItem("currentView", "home");
-            event.preventDefault();
-            event.returnValue = '';
+            // event.preventDefault();
+            // event.returnValue = '';
         });
         // Direct tournament interactivity test
         document.addEventListener('DOMContentLoaded', function () {

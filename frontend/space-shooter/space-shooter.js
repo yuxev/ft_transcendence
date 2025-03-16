@@ -1089,7 +1089,7 @@ window.SpaceShooter = {
             this.animationId = null;
         }
         
-        // Clear intervals
+        // Clear all intervals
         if (this.bombInterval) {
             clearInterval(this.bombInterval);
             this.bombInterval = null;
@@ -1100,18 +1100,48 @@ window.SpaceShooter = {
             this.powerUpInterval = null;
         }
         
-        // Remove event listeners
+        // Remove all event listeners
         document.removeEventListener("keydown", this.keyDownHandler);
         document.removeEventListener("keyup", this.keyUpHandler);
-        // window.removeEventListener("resize", this.resizeHandler);
         
-        // Hide return button if it exists
-        if (this.returnButton) {
-            this.returnButton.style.display = 'none';
+        // Reset game state completely
+        this.keys = { 
+            left: false, right: false, shoot: false,
+            p1Left: false, p1Right: false, p1Shoot: false,
+            p2Left: false, p2Right: false, p2Shoot: false
+        };
+        
+        // Clear canvas completely
+        const canvas = document.getElementById("gameCanvas");
+        if (canvas) {
+            const ctx = canvas.getContext("2d");
+            if (ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
         }
         
-        // Reset all game variables
-        this.keys = { left: false, right: false, shoot: false };
+        // Hide ALL game elements
+        const elements = [
+            "gameCanvas", "gameOver", "hud", "multiplayerHUD", 
+            "winnerPanel", "gameModeSelection", "multiplayerSetup"
+        ];
+        
+        elements.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                if (id === "gameCanvas") {
+                    // For canvas, we might need to reset its properties
+                    element.width = element.width; // This resets the canvas
+                } else {
+                    element.style.display = 'none';
+                }
+            }
+        });
+        
+        // Force CSS refresh
+        document.getElementById('spaceShooterStyles').media = "none";
+        
+        console.log("Space Shooter cleanup complete");
     }
 };
 

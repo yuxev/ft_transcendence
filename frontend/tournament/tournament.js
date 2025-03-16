@@ -110,7 +110,7 @@ const Tournament = {
         for (let i = 1; i < count; i++) {
             const inputDiv = document.createElement('div');
             inputDiv.className = 'player-input';
-            inputDiv.innerHTML = `<input type="text" value="AI Player ${i}" class="player-name-input">`;
+            inputDiv.innerHTML = `<input type="text" value="Player ${i}" class="player-name-input">`;
             container.appendChild(inputDiv);
         }
     },
@@ -118,17 +118,18 @@ const Tournament = {
     // Generate tournament from player inputs
     generateTournament: function() {
         // Get player names from inputs
-        const inputs = document.querySelectorAll('.player-name-input');
+        const inputs = document.querySelectorAll('#players-container .player-name-input');
+        console.log(inputs);
         const players = [];
         let allFilled = true;
         
         inputs.forEach(input => {
             const name = input.value.trim();
-            if (!name) {
+            console.log(name);
+            if (!name)
                 allFilled = false;
-            } else {
+            else
                 players.push(name);
-            }
         });
         
         // Check that all inputs are filled
@@ -289,6 +290,7 @@ const Tournament = {
         console.log("Checking for match results");
         
         const matchResult = localStorage.getItem('matchResult');
+        console.log(matchResult);
         if (!matchResult) return;
         
         try {
@@ -336,10 +338,18 @@ const Tournament = {
                         console.log("Final match complete! Tournament winner:", match.winner);
                         this.state.isComplete = true;
                         this.showWinner(match.winner);
-                    } else if (matchRoundIndex === this.state.rounds.length - 1) {
-                        // This was the last round but not a single match, create final round
-                        console.log("Moving to final round");
+                    } else {
+                        // This was not the final round, advance to next round
+                        console.log("Advancing to next round");
                         this.advanceWinners(matchRoundIndex);
+                        
+                        // Check if the new round is the final one with only one match
+                        const newRound = this.state.rounds[this.state.rounds.length - 1];
+                        if (newRound && newRound.matches.length === 1 && newRound.matches[0].winner) {
+                            // We have an automatic winner in the final (likely from a bye)
+                            this.state.isComplete = true;
+                            this.showWinner(newRound.matches[0].winner);
+                        }
                     }
                 }
                 
@@ -418,8 +428,18 @@ const Tournament = {
                             onGameOver: function(winner, score1, score2) {
                                 console.log(`Tournament match completed: ${winner} wins ${score1}-${score2}`);
                                 
+                                // Fix: Map Player 1/Player 2 to actual player names
+                                let actualWinner;
+                                if (winner === "Player 1") {
+                                    actualWinner = nextMatch.player1;
+                                } else if (winner === "Player 2") {
+                                    actualWinner = nextMatch.player2;
+                                } else {
+                                    actualWinner = winner; // In case it's already the correct name
+                                }
+                                
                                 localStorage.setItem('matchResult', JSON.stringify({
-                                    winner: winner,
+                                    winner: actualWinner,
                                     score: `${score1}-${score2}`
                                 }));
                                 
@@ -479,9 +499,19 @@ const Tournament = {
             onGameOver: (winner, score1, score2) => {
                 console.log(`Tournament match completed: ${winner} wins ${score1}-${score2}`);
                 
-                // Save match result
+                // Fix: Map Player 1/Player 2 to actual player names
+                let actualWinner;
+                if (winner === "Player 1") {
+                    actualWinner = match.player1;
+                } else if (winner === "Player 2") {
+                    actualWinner = match.player2;
+                } else {
+                    actualWinner = winner; // In case it's already the correct name
+                }
+                
+                // Save match result with correct player name
                 localStorage.setItem('matchResult', JSON.stringify({
-                    winner: winner,
+                    winner: actualWinner,
                     score: `${score1}-${score2}`
                 }));
                 
@@ -511,10 +541,23 @@ const Tournament = {
         // If tournament is complete, get the winner from the final match
         if (this.state.isComplete && this.state.rounds.length > 0) {
             const finalRound = this.state.rounds[this.state.rounds.length - 1];
-            if (finalRound.matches.length > 0) {
-                return finalRound.matches[0].winner;
+            if (finalRound && finalRound.matches && finalRound.matches.length > 0) {
+                const finalMatch = finalRound.matches[0];
+                if (finalMatch && finalMatch.winner) {
+                    return finalMatch.winner;
+                }
             }
         }
+        
+        // Alternative winner determination if the state is inconsistent
+        // Check if the last round has only one match with a winner
+        if (this.state.rounds.length > 0) {
+            const lastRound = this.state.rounds[this.state.rounds.length - 1];
+            if (lastRound.matches.length === 1 && lastRound.matches[0].winner) {
+                return lastRound.matches[0].winner;
+            }
+        }
+        
         return null;
     },
     
@@ -522,6 +565,11 @@ const Tournament = {
     showWinner: function(winner) {
         // Check if winner announcement already exists
         if (document.querySelector('.winner-announcement')) {
+            // Update the existing announcement if winner has changed
+            const winnerNameEl = document.querySelector('.winner-announcement .winner-name');
+            if (winnerNameEl && winnerNameEl.textContent !== winner) {
+                winnerNameEl.textContent = winner;
+            }
             return;
         }
         
@@ -549,6 +597,13 @@ const Tournament = {
                 this.resetTournament();
                 winnerAnnouncement.remove();
             });
+        }
+        
+        // Also update tournament status in the header
+        const tournamentStatus = document.querySelector('.tournament-status');
+        if (tournamentStatus) {
+            tournamentStatus.textContent = 'Complete';
+            tournamentStatus.classList.add('complete');
         }
     },
     
@@ -751,9 +806,22 @@ const Tournament = {
         console.log(`Advancing winners from round ${roundIndex}`);
         
         // Get winners from the completed round
-        const winners = this.state.rounds[roundIndex].matches.filter(m => m.winner).map(m => m.winner);
+        const completedRound = this.state.rounds[roundIndex];
+        if (!completedRound) {
+            console.error(`Round ${roundIndex} not found`);
+            return;
+        }
+        
+        const winners = completedRound.matches
+            .filter(m => m.winner)
+            .map(m => m.winner);
         
         console.log(`Winners advancing: ${winners.join(', ')}`);
+        
+        if (winners.length === 0) {
+            console.error("No winners found in completed round");
+            return;
+        }
         
         // If only one winner, tournament is complete
         if (winners.length === 1) {
@@ -787,7 +855,7 @@ const Tournament = {
                     id: `match-${roundIndex + 1}-${i/2}`,
                     player1: winners[i],
                     player2: 'BYE',
-                    winner: winners[i],
+                    winner: winners[i], // Automatically set winner for bye matches
                     score: 'BYE',
                     roundIndex: roundIndex + 1
                 });
@@ -802,6 +870,13 @@ const Tournament = {
         // Check if this is the final round (only 1 match)
         if (nextRound.matches.length === 1) {
             console.log('Created final round with 1 match');
+            
+            // If that one match already has a winner (BYE), tournament is complete
+            if (nextRound.matches[0].winner) {
+                console.log('Final match already has a winner (BYE):', nextRound.matches[0].winner);
+                this.state.isComplete = true;
+                this.showWinner(nextRound.matches[0].winner);
+            }
         }
     }
 };

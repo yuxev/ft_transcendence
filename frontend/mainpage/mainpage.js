@@ -164,6 +164,19 @@ function showView(viewName) {
         view.style.display = 'none';
     });
     
+    // Disable all game-specific styles
+    const spaceShooterStyles = document.getElementById('spaceShooterStyles');
+    if (spaceShooterStyles) {
+        spaceShooterStyles.media = "none";
+    }
+    
+    // Enable styles for current view only
+    if (viewName === 'spaceShooter') {
+        if (spaceShooterStyles) {
+            spaceShooterStyles.media = "all";
+        }
+    }
+    
     // Show the requested view
     const viewElement = document.getElementById(`${viewName}View`);
     if (!viewElement) {
@@ -470,7 +483,7 @@ function loadTournamentResources(callback) {
     }
 }
 
-// Add this function to handle tournament games specifically
+// Updated startTournamentGame function to properly map player names
 function startTournamentGame() {
     console.log("Starting tournament game");
     
@@ -526,9 +539,19 @@ function startTournamentGame() {
             onGameOver: function(winner, score1, score2) {
                 console.log(`Tournament match completed: ${winner} wins ${score1}-${score2}`);
                 
-                // Save result
+                // FIX: Map "Player 1" or "Player 2" to the actual player name
+                let actualWinner;
+                if (winner === "Player 1") {
+                    actualWinner = currentMatch.player1;
+                } else if (winner === "Player 2") {
+                    actualWinner = currentMatch.player2;
+                } else {
+                    actualWinner = winner; // In case it's already the correct name
+                }
+                
+                // Save result with correct player name
                 localStorage.setItem('matchResult', JSON.stringify({
-                    winner: winner,
+                    winner: actualWinner,
                     score: `${score1}-${score2}`
                 }));
                 
@@ -896,34 +919,34 @@ function updateLanguageButtons() {
 function loadSpaceShooterResources(callback) {
     console.log("Loading Space Shooter resources");
     
-    // Check if resources are already loaded
-    if (window.SpaceShooter && document.getElementById('spaceShooterCssLoaded')) {
-        console.log("Space Shooter resources already loaded");
-        callback();
-        return;
+    // Ensure the CSS is properly loaded but inactive until needed
+    const spaceShooterStyles = document.getElementById('spaceShooterStyles');
+    if (spaceShooterStyles) {
+        spaceShooterStyles.media = "none"; // Make sure it's disabled initially
     }
     
-    // Load CSS
-    if (!document.getElementById('spaceShooterCssLoaded')) {
-        console.log("Loading Space Shooter CSS");
-        const spaceShooterCss = document.createElement('link');
-        spaceShooterCss.id = 'spaceShooterCssLoaded';
-        spaceShooterCss.rel = 'stylesheet';
-        spaceShooterCss.href = '../space-shooter/space-shooter.css';
-        document.head.appendChild(spaceShooterCss);
-    }
-    
-    // Load JS
+    // Load JS if not already loaded
     if (!window.SpaceShooter) {
         console.log("Loading Space Shooter JS");
         const spaceShooterScript = document.createElement('script');
         spaceShooterScript.src = '../space-shooter/space-shooter.js';
         spaceShooterScript.onload = function() {
             console.log("Space Shooter script loaded");
+            
+            // Now that the JS is loaded, enable the CSS
+            if (document.getElementById('spaceShooterView').style.display === 'block') {
+                spaceShooterStyles.media = "all";
+            }
+            
             setTimeout(callback, 100); // Give it time to initialize
         };
         document.body.appendChild(spaceShooterScript);
     } else {
+        // If JS is already loaded and we're showing the space shooter view,
+        // make sure CSS is enabled
+        if (document.getElementById('spaceShooterView').style.display === 'block') {
+            spaceShooterStyles.media = "all";
+        }
         callback();
     }
 }
