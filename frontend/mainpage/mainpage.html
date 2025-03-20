@@ -1,508 +1,663 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PONG Game</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="mainpage.css">
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="mainpage.css" />
+    <link rel="stylesheet" href="../myultiPlayerGmae/style.css" />
     <script src="/locales/i18n.js"></script>
-    <link id="spaceShooterStyles" rel="stylesheet" href="/space-shooter/space-shooter.css" media="none">
+    <link
+      id="spaceShooterStyles"
+      rel="stylesheet"
+      href="/space-shooter/space-shooter.css"
+      media="none"
+    />
+  </head>
 
-</head>
-
-<body>
+  <body>
     <header>
-        <div class="user-profile">
-            <img id="userAvatar" class="avatar" src="https://via.placeholder.com/40" alt="User Avatar">
-            <span id="userName" class="player-name">Player</span>
-        </div>
-        <div class="language-switcher">
-            <button data-language="en" class="lang-btn">EN</button>
-            <button data-language="es" class="lang-btn">ES</button>
-            <button data-language="fr" class="lang-btn">FR</button>
-        </div>
-        <div class="settings">
-            <i class="fas fa-cog"></i>
-        </div>
+      <div class="user-profile">
+        <img
+          id="userAvatar"
+          class="avatar"
+          src="https://via.placeholder.com/40"
+          alt="User Avatar"
+        />
+        <span id="userName" class="player-name">Player</span>
+      </div>
+      <div class="language-switcher">
+        <button data-language="en" class="lang-btn">EN</button>
+        <button data-language="es" class="lang-btn">ES</button>
+        <button data-language="fr" class="lang-btn">FR</button>
+      </div>
+      <div class="settings">
+        <i class="fas fa-cog"></i>
+      </div>
     </header>
 
     <!-- Home View -->
     <div id="homeView" class="view">
-        <main>
-            <div class="logo">PONG</div>
-            <div class="game-modes">
-                <div class="mode-card spa-link" data-path="/game">
-                    <h2 data-i18n="game.play">Play</h2>
-                    <span class="mode-title" data-i18n="game.oneVsOne">1 vs 1</span>
-                </div>
-                <div class="mode-card spa-link" data-path="/tournament">
-                    <h2 data-i18n="game.play">Play</h2>
-                    <span class="mode-title" data-i18n="tournament.tournament">Tournament</span>
-                </div>
-                <div class="mode-card spa-link" data-path="/space-shooter">
-                    <h2 data-i18n="game.play">Play</h2>
-                    <span class="mode-title">Space Shooter</span>
-                </div>
-                <div class="mode-card spa-link" data-path="/multiplayer">
-                    <h2 data-i18n="game.play">Play</h2>
-                    <span class="mode-title">Multiplayer</span>
-                </div>
-            </div>
-        </main>
+      <main>
+        <div class="logo">PONG</div>
+        <div class="game-modes">
+          <div class="mode-card spa-link" data-path="/game">
+            <h2 data-i18n="game.play">Play</h2>
+            <span class="mode-title" data-i18n="game.oneVsOne">1 vs 1</span>
+          </div>
+          <div class="mode-card spa-link" data-path="/tournament">
+            <h2 data-i18n="game.play">Play</h2>
+            <span class="mode-title" data-i18n="tournament.tournament"
+              >Tournament</span
+            >
+          </div>
+          <div class="mode-card spa-link" data-path="/space-shooter">
+            <h2 data-i18n="game.play">Play</h2>
+            <span class="mode-title">Space Shooter</span>
+          </div>
+          <div class="mode-card spa-link" data-path="/multiplayer">
+            <h2 data-i18n="game.play">Play</h2>
+            <span class="mode-title">Multiplayer</span>
+          </div>
+        </div>
+      </main>
     </div>
 
     <!-- Game View -->
-    <div id="gameView" class="view" style="display:none;">
-        <button class="back-button spa-link" data-path="/home">
-            <i class="fas fa-arrow-left"></i> Back to Home
-        </button>
-        <main>
-            <h1 class="section-title" data-i18n="game.oneVsOne">1 vs 1 Game</h1>
-            <div class="game-container">
-                <div class="game-header">
-                    <div class="player-card p1" id="player1Name">
-                        <i class="fas fa-user"></i>
-                        <span>Player 1</span>
-                    </div>
-                    <div class="score-display">
-                        <div class="score">
-                            <span id="score1">0</span>
-                            <span class="separator">:</span>
-                            <span id="score2">0</span>
-                        </div>
-                    </div>
-                    <div class="player-card p2" id="player2Name">
-                        <i class="fas fa-user"></i>
-                        <span>Player 2</span>
-                    </div>
-                </div>
-
-                <div class="arena">
-                    <div class="player"></div>
-                    <div class="ball"></div>
-                    <div class="half-line"></div>
-                </div>
-
-                <button id="finishGame" class="return-button" style="display:none;">
-                    <i class="fas fa-trophy"></i>
-                    Return to Home
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+    <div id="gameView" class="view" style="display: none">
+      <button class="back-button spa-link" data-path="/home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+      </button>
+      <main>
+        <h1 class="section-title" data-i18n="game.oneVsOne">1 vs 1 Game</h1>
+        <div class="game-container">
+          <div class="game-header">
+            <div class="player-card p1" id="player1Name">
+              <i class="fas fa-user"></i>
+              <span>Player 1</span>
             </div>
-        </main>
+            <div class="score-display">
+              <div class="score">
+                <span id="score1">0</span>
+                <span class="separator">:</span>
+                <span id="score2">0</span>
+              </div>
+            </div>
+            <div class="player-card p2" id="player2Name">
+              <i class="fas fa-user"></i>
+              <span>Player 2</span>
+            </div>
+          </div>
+
+          <div class="arena">
+            <div class="player"></div>
+            <div class="ball"></div>
+            <div class="half-line"></div>
+          </div>
+
+          <button id="finishGame" class="return-button" style="display: none">
+            <i class="fas fa-trophy"></i>
+            Return to Home
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </main>
     </div>
 
     <!-- Tournament View -->
-    <div id="tournamentView" class="view" style="display:none;">
-        <button class="back-button spa-link" data-path="/home">
-            <i class="fas fa-arrow-left"></i> Back to Home
-        </button>
-        <main>
-            <h1 class="section-title" data-i18n="tournament.tournament">Tournament Mode</h1>
+    <div id="tournamentView" class="view" style="display: none">
+      <button class="back-button spa-link" data-path="/home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+      </button>
+      <main>
+        <h1 class="section-title" data-i18n="tournament.tournament">
+          Tournament Mode
+        </h1>
 
-            <!-- Tournament Setup Section -->
-            <div class="setup-section">
-                <div class="section-header">
-                    <h2>Tournament Setup</h2>
-                    <div class="progress-steps">
-                        <div class="step active">
-                            <div class="step-number">1</div>
-                            <i class="fas fa-users"></i>
-                            <span>Select Players</span>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">2</div>
-                            <i class="fas fa-sitemap"></i>
-                            <span>Generate Bracket</span>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">3</div>
-                            <i class="fas fa-play"></i>
-                            <span>Start Tournament</span>
-                        </div>
-                    </div>
+        <!-- Tournament Setup Section -->
+        <div class="setup-section">
+          <div class="section-header">
+            <h2>Tournament Setup</h2>
+            <div class="progress-steps">
+              <div class="step active">
+                <div class="step-number">1</div>
+                <i class="fas fa-users"></i>
+                <span>Select Players</span>
+              </div>
+              <div class="step">
+                <div class="step-number">2</div>
+                <i class="fas fa-sitemap"></i>
+                <span>Generate Bracket</span>
+              </div>
+              <div class="step">
+                <div class="step-number">3</div>
+                <i class="fas fa-play"></i>
+                <span>Start Tournament</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="setup-card">
+            <h3>Select Tournament Size</h3>
+            <div class="player-count-selector">
+              <button class="count-button" data-count="4">
+                <div class="button-content">
+                  <i class="fas fa-users"></i>
+                  <div class="button-text">
+                    <span>4 Players</span>
+                    <small>Quick Match</small>
+                  </div>
                 </div>
-
-                <div class="setup-card">
-                    <h3>Select Tournament Size</h3>
-                    <div class="player-count-selector">
-                        <button class="count-button" data-count="4">
-                            <div class="button-content">
-                                <i class="fas fa-users"></i>
-                                <div class="button-text">
-                                    <span>4 Players</span>
-                                    <small>Quick Match</small>
-                                </div>
-                            </div>
-                        </button>
-                        <button class="count-button" data-count="8">
-                            <div class="button-content">
-                                <i class="fas fa-users-gear"></i>
-                                <div class="button-text">
-                                    <span>8 Players</span>
-                                    <small>Extended Match</small>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-
-                    <div class="player-inputs">
-                        <h3>Player Registration</h3>
-                        <div id="players-container">
-                            <!-- Player inputs will be generated here -->
-                        </div>
-                        <div class="error-message">
-                            <i class="fas fa-exclamation-circle"></i>
-                            Please fill in all player names
-                        </div>
-                        <button class="generate-bracket-button">
-                            <i class="fas fa-sitemap"></i>
-                            Generate Tournament Bracket
-                        </button>
-                    </div>
+              </button>
+              <button class="count-button" data-count="8">
+                <div class="button-content">
+                  <i class="fas fa-users-gear"></i>
+                  <div class="button-text">
+                    <span>8 Players</span>
+                    <small>Extended Match</small>
+                  </div>
                 </div>
+              </button>
             </div>
 
-            <!-- Tournament Bracket Section -->
-            <div class="tournament-container">
-                <div class="tournament-header">
-                    <div class="header-left">
-                        <h2>Tournament Bracket</h2>
-                        <span class="tournament-status">In Progress</span>
-                    </div>
-                    <div class="header-right">
-                        <button class="restart-tournament-btn">
-                            <i class="fas fa-redo-alt"></i>
-                            Restart Tournament
-                        </button>
-                    </div>
-                </div>
-                <div class="bracket" id="tournament-bracket">
-                    <!-- Tournament bracket will be generated here -->
-                </div>
-                <button class="start-button">
-                    <i class="fas fa-play"></i>
-                    Start Match
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+            <div class="player-inputs">
+              <h3>Player Registration</h3>
+              <div id="players-container">
+                <!-- Player inputs will be generated here -->
+              </div>
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                Please fill in all player names
+              </div>
+              <button class="generate-bracket-button">
+                <i class="fas fa-sitemap"></i>
+                Generate Tournament Bracket
+              </button>
             </div>
-        </main>
+          </div>
+        </div>
+
+        <!-- Tournament Bracket Section -->
+        <div class="tournament-container">
+          <div class="tournament-header">
+            <div class="header-left">
+              <h2>Tournament Bracket</h2>
+              <span class="tournament-status">In Progress</span>
+            </div>
+            <div class="header-right">
+              <button class="restart-tournament-btn">
+                <i class="fas fa-redo-alt"></i>
+                Restart Tournament
+              </button>
+            </div>
+          </div>
+          <div class="bracket" id="tournament-bracket">
+            <!-- Tournament bracket will be generated here -->
+          </div>
+          <button class="start-button">
+            <i class="fas fa-play"></i>
+            Start Match
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </main>
     </div>
 
     <!-- Update the Profile View to include edit functionality -->
-    <div id="profileView" class="view" style="display:none;">
-        <button class="back-button spa-link" data-path="/home">
-            <i class="fas fa-arrow-left"></i> Back to Home
-        </button>
-        <main>
-            <h1 class="section-title">User Profile</h1>
-            <div class="profile-container">
-                <div class="profile-header">
-                    <div class="profile-avatar-container">
-                        <img id="profileAvatar" class="profile-avatar" src="https://via.placeholder.com/150"
-                            alt="User Avatar">
-                        <div class="avatar-edit-overlay">
-                            <label for="avatarUpload" class="avatar-edit-btn">
-                                <i class="fas fa-camera"></i>
-                            </label>
-                            <input type="file" id="avatarUpload" accept="image/*" style="display:none">
-                        </div>
-                    </div>
-                    <div class="profile-info">
-                        <div class="profile-field">
-                            <h2 id="profileName">Username</h2>
-                            <div class="edit-field" style="display:none">
-                                <input type="text" id="nameInput" class="profile-input">
-                                <button class="save-field-btn" data-field="name"><i class="fas fa-check"></i></button>
-                                <button class="cancel-field-btn"><i class="fas fa-times"></i></button>
-                            </div>
-                            <button class="edit-btn" data-field="name"><i class="fas fa-edit"></i></button>
-                        </div>
-                        <div class="profile-field">
-                            <p id="profileEmail">user@example.com</p>
-                            <div class="edit-field" style="display:none">
-                                <input type="email" id="emailInput" class="profile-input">
-                                <button class="save-field-btn" data-field="email"><i class="fas fa-check"></i></button>
-                                <button class="cancel-field-btn"><i class="fas fa-times"></i></button>
-                            </div>
-                            <button class="edit-btn" data-field="email"><i class="fas fa-edit"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-actions">
-                    <button id="logoutButton" class="profile-button logout-button">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                    <button id="saveProfileButton" class="profile-button save-button">
-                        <i class="fas fa-save"></i> Save Changes
-                    </button>
-                </div>
-
-                <!-- Status message for updates -->
-                <div id="profileUpdateStatus" class="update-status"></div>
-
-                <!-- Update the password section -->
-                <div class="profile-section password-section">
-                    <h3 class="section-title-small">Change Password</h3>
-                    <p id="passwordInstructions" class="password-instructions" style="display:none;"></p>
-
-                    <div class="profile-field">
-                        <div class="password-fields">
-                            <div id="currentPasswordContainer" class="form-group">
-                                <label for="currentPassword">Current Password</label>
-                                <input type="password" id="currentPassword" class="profile-input"
-                                    placeholder="Current password">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="newPassword">New Password</label>
-                                <input type="password" id="newPassword" class="profile-input"
-                                    placeholder="New password">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="confirmPassword">Confirm Password</label>
-                                <input type="password" id="confirmPassword" class="profile-input"
-                                    placeholder="Confirm new password">
-                            </div>
-
-                            <div class="password-actions">
-                                <button id="changePasswordButton" class="profile-button save-button">
-                                    <i class="fas fa-key"></i> Change Password
-                                </button>
-                            </div>
-
-                            <!-- Password update status message -->
-                            <div id="passwordUpdateStatus" class="update-status"></div>
-                        </div>
-                    </div>
-                </div>
+    <div id="profileView" class="view" style="display: none">
+      <button class="back-button spa-link" data-path="/home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+      </button>
+      <main>
+        <h1 class="section-title">User Profile</h1>
+        <div class="profile-container">
+          <div class="profile-header">
+            <div class="profile-avatar-container">
+              <img
+                id="profileAvatar"
+                class="profile-avatar"
+                src="https://via.placeholder.com/150"
+                alt="User Avatar"
+              />
+              <div class="avatar-edit-overlay">
+                <label for="avatarUpload" class="avatar-edit-btn">
+                  <i class="fas fa-camera"></i>
+                </label>
+                <input
+                  type="file"
+                  id="avatarUpload"
+                  accept="image/*"
+                  style="display: none"
+                />
+              </div>
             </div>
-        </main>
+            <div class="profile-info">
+              <div class="profile-field">
+                <h2 id="profileName">Username</h2>
+                <div class="edit-field" style="display: none">
+                  <input type="text" id="nameInput" class="profile-input" />
+                  <button class="save-field-btn" data-field="name">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="cancel-field-btn">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <button class="edit-btn" data-field="name">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+              <div class="profile-field">
+                <p id="profileEmail">user@example.com</p>
+                <div class="edit-field" style="display: none">
+                  <input type="email" id="emailInput" class="profile-input" />
+                  <button class="save-field-btn" data-field="email">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="cancel-field-btn">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <button class="edit-btn" data-field="email">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-actions">
+            <button id="logoutButton" class="profile-button logout-button">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            <button id="saveProfileButton" class="profile-button save-button">
+              <i class="fas fa-save"></i> Save Changes
+            </button>
+          </div>
+
+          <!-- Status message for updates -->
+          <div id="profileUpdateStatus" class="update-status"></div>
+
+          <!-- Update the password section -->
+          <div class="profile-section password-section">
+            <h3 class="section-title-small">Change Password</h3>
+            <p
+              id="passwordInstructions"
+              class="password-instructions"
+              style="display: none"
+            ></p>
+
+            <div class="profile-field">
+              <div class="password-fields">
+                <div id="currentPasswordContainer" class="form-group">
+                  <label for="currentPassword">Current Password</label>
+                  <input
+                    type="password"
+                    id="currentPassword"
+                    class="profile-input"
+                    placeholder="Current password"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="newPassword">New Password</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    class="profile-input"
+                    placeholder="New password"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="confirmPassword">Confirm Password</label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    class="profile-input"
+                    placeholder="Confirm new password"
+                  />
+                </div>
+
+                <div class="password-actions">
+                  <button
+                    id="changePasswordButton"
+                    class="profile-button save-button"
+                  >
+                    <i class="fas fa-key"></i> Change Password
+                  </button>
+                </div>
+
+                <!-- Password update status message -->
+                <div id="passwordUpdateStatus" class="update-status"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
 
     <!-- Update Space Shooter View -->
-    <div id="spaceShooterView" class="view" style="display:none;">
-        <button class="back-button spa-link" data-path="/home">
-            <i class="fas fa-arrow-left"></i> Back to Home
-        </button>
-        <main>
-            <h1 class="section-title">Space Shooter</h1>
-            <div class="game-frame">
-                <h2>Space Defender</h2>
-                <div class="game-container">
-                    <div id="gameModeSelection" class="game-mode-selection">
-                        <h2>Select Game Mode</h2>
-                        <div class="mode-buttons">
-                            <button class="game-btn" id="singlePlayerBtn">Single Player</button>
-                            <button class="game-btn" id="multiplayerBtn">Local Multiplayer</button>
-                        </div>
-                    </div>
-
-                    <canvas id="gameCanvas"></canvas>
-                    <div class="hud">
-                        <div class="hp-container">
-                            <span class="hp-text">HP:</span>
-                            <span class="hp-value" id="hp">3</span>
-                        </div>
-                    </div>
-                    <div class="game-over" id="gameOver">
-                        <h2>GAME OVER</h2>
-                        <button class="game-btn" id="restartBtn">Play Again</button>
-                    </div>
-                    <div class="sound-toggle" id="soundToggle">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMThjLTMuMzEzIDAtNi0yLjY4Ny02LTZzMi42ODctNiA2LTYgNiAyLjY4NyA2IDYtMi42ODcgNi02IDZ6Ii8+PC9zdmc+"
-                            id="soundIcon">
-                    </div>
-                    
-                    <!-- Game History Panel -->
-                    <div class="game-history-panel" id="gameHistoryPanel" style="display: none;">
-                        <div class="history-header">
-                            <h3>Game History</h3>
-                            <button class="close-history-btn" id="closeHistoryBtn">×</button>
-                        </div>
-                        <div class="best-score-section">
-                            <h4>Best Score</h4>
-                            <div class="best-score" id="bestScore">0</div>
-                            <div class="best-score-date" id="bestScoreDate">Never</div>
-                        </div>
-                        <div class="history-list-container">
-                            <h4>Recent Games</h4>
-                            <div class="history-list" id="historyList">
-                                <!-- History items will be added here dynamically -->
-                                <div class="no-history">No game history yet</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Multiplayer Setup Panel -->
-                    <div id="multiplayerSetup" class="multiplayer-setup" style="display: none;">
-                        <h2>Player Setup</h2>
-                        <div class="player-setup-form">
-                            <div class="player-input-group">
-                                <label for="player1NameInput">Player 1 Name:</label>
-                                <input type="text" id="player1NameInput" placeholder="Player 1" class="player-name-input">
-                                <div class="controls-info">
-                                    <span>Controls: A/D to move, W to shoot</span>
-                                </div>
-                            </div>
-                            <div class="player-input-group">
-                                <label for="player2NameInput">Player 2 Name:</label>
-                                <input type="text" id="player2NameInput" placeholder="Player 2" class="player-name-input">
-                                <div class="controls-info">
-                                    <span>Controls: ←/→ to move, ↑ to shoot</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setup-buttons">
-                            <button class="game-btn" id="startMultiplayerBtn">Start Game</button>
-                            <button class="game-btn secondary" id="cancelMultiplayerBtn">Back</button>
-                        </div>
-                    </div>
-
-                    <!-- Multiplayer HUD -->
-                    <div id="multiplayerHUD" class="multiplayer-hud" style="display: none;">
-                        <div class="player-info">
-                            <span class="player-name" id="player1NameDisplay">Player 1</span>
-                            <div class="hp-container">
-                                <span class="hp-text">HP:</span>
-                                <span class="hp-value" id="p1hp">3</span>
-                            </div>
-                            <div class="score-container">
-                                <span class="score-text">Score:</span>
-                                <span class="score-value" id="player1ScoreDisplay">0</span>
-                            </div>
-                        </div>
-                        <div class="player-info">
-                            <span class="player-name" id="player2NameDisplay">Player 2</span>
-                            <div class="hp-container">
-                                <span class="hp-text">HP:</span>
-                                <span class="hp-value" id="p2hp">3</span>
-                            </div>
-                            <div class="score-container">
-                                <span class="score-text">Score:</span>
-                                <span class="score-value" id="player2ScoreDisplay">0</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Winner Panel -->
-                    <div class="winner-panel" id="winnerPanel" style="display: none;">
-                        <div class="panel-header">
-                            <h3>We Have a Winner!</h3>
-                        </div>
-                        <div class="panel-content">
-                            <div class="winner-announcement">
-                                <h2>Player <span id="winnerNumber">1</span> Wins!</h2>
-                            </div>
-                            <div class="final-scores">
-                                <div class="final-score">
-                                    <span class="final-label">Player 1:</span>
-                                    <span class="final-value" id="player1FinalScore">0</span>
-                                </div>
-                                <div class="final-score">
-                                    <span class="final-label">Player 2:</span>
-                                    <span class="final-value" id="player2FinalScore">0</span>
-                                </div>
-                            </div>
-                            <button class="game-btn" id="endMultiplayerBtn">Return to Single Player</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="game-controls">
-                    <p>Controls: Arrow keys to move, Spacebar to shoot</p>
-                    <div class="controls-section">
-                        <button class="game-btn" id="restartGameBtn">Restart Game</button>
-                        <button class="game-btn" id="gameHistoryBtn">Game History</button>
-                    </div>
-                </div>
+    <div id="spaceShooterView" class="view" style="display: none">
+      <button class="back-button spa-link" data-path="/home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+      </button>
+      <main>
+        <h1 class="section-title">Space Shooter</h1>
+        <div class="game-frame">
+          <h2>Space Defender</h2>
+          <div class="game-container">
+            <div id="gameModeSelection" class="game-mode-selection">
+              <h2>Select Game Mode</h2>
+              <div class="mode-buttons">
+                <button class="game-btn" id="singlePlayerBtn">
+                  Single Player
+                </button>
+                <button class="game-btn" id="multiplayerBtn">
+                  Local Multiplayer
+                </button>
+              </div>
             </div>
-        </main>
+
+            <canvas id="gameCanvas"></canvas>
+            <div class="hud">
+              <div class="hp-container">
+                <span class="hp-text">HP:</span>
+                <span class="hp-value" id="hp">3</span>
+              </div>
+            </div>
+            <div class="game-over" id="gameOver">
+              <h2>GAME OVER</h2>
+              <button class="game-btn" id="restartBtn">Play Again</button>
+            </div>
+            <div class="sound-toggle" id="soundToggle">
+              <img
+                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMThjLTMuMzEzIDAtNi0yLjY4Ny02LTZzMi42ODctNiA2LTYgNiAyLjY4NyA2IDYtMi42ODcgNi02IDZ6Ii8+PC9zdmc+"
+                id="soundIcon"
+              />
+            </div>
+
+            <!-- Game History Panel -->
+            <div
+              class="game-history-panel"
+              id="gameHistoryPanel"
+              style="display: none"
+            >
+              <div class="history-header">
+                <h3>Game History</h3>
+                <button class="close-history-btn" id="closeHistoryBtn">
+                  ×
+                </button>
+              </div>
+              <div class="best-score-section">
+                <h4>Best Score</h4>
+                <div class="best-score" id="bestScore">0</div>
+                <div class="best-score-date" id="bestScoreDate">Never</div>
+              </div>
+              <div class="history-list-container">
+                <h4>Recent Games</h4>
+                <div class="history-list" id="historyList">
+                  <!-- History items will be added here dynamically -->
+                  <div class="no-history">No game history yet</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Multiplayer Setup Panel -->
+            <div
+              id="multiplayerSetup"
+              class="multiplayer-setup"
+              style="display: none"
+            >
+              <h2>Player Setup</h2>
+              <div class="player-setup-form">
+                <div class="player-input-group">
+                  <label for="player1NameInput">Player 1 Name:</label>
+                  <input
+                    type="text"
+                    id="player1NameInput"
+                    placeholder="Player 1"
+                    class="player-name-input"
+                  />
+                  <div class="controls-info">
+                    <span>Controls: A/D to move, W to shoot</span>
+                  </div>
+                </div>
+                <div class="player-input-group">
+                  <label for="player2NameInput">Player 2 Name:</label>
+                  <input
+                    type="text"
+                    id="player2NameInput"
+                    placeholder="Player 2"
+                    class="player-name-input"
+                  />
+                  <div class="controls-info">
+                    <span>Controls: ←/→ to move, ↑ to shoot</span>
+                  </div>
+                </div>
+              </div>
+              <div class="setup-buttons">
+                <button class="game-btn" id="startMultiplayerBtn">
+                  Start Game
+                </button>
+                <button class="game-btn secondary" id="cancelMultiplayerBtn">
+                  Back
+                </button>
+              </div>
+            </div>
+
+            <!-- Multiplayer HUD -->
+            <div
+              id="multiplayerHUD"
+              class="multiplayer-hud"
+              style="display: none"
+            >
+              <div class="player-info">
+                <span class="player-name" id="player1NameDisplay"
+                  >Player 1</span
+                >
+                <div class="hp-container">
+                  <span class="hp-text">HP:</span>
+                  <span class="hp-value" id="p1hp">3</span>
+                </div>
+                <div class="score-container">
+                  <span class="score-text">Score:</span>
+                  <span class="score-value" id="player1ScoreDisplay">0</span>
+                </div>
+              </div>
+              <div class="player-info">
+                <span class="player-name" id="player2NameDisplay"
+                  >Player 2</span
+                >
+                <div class="hp-container">
+                  <span class="hp-text">HP:</span>
+                  <span class="hp-value" id="p2hp">3</span>
+                </div>
+                <div class="score-container">
+                  <span class="score-text">Score:</span>
+                  <span class="score-value" id="player2ScoreDisplay">0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Winner Panel -->
+            <div class="winner-panel" id="winnerPanel" style="display: none">
+              <div class="panel-header">
+                <h3>We Have a Winner!</h3>
+              </div>
+              <div class="panel-content">
+                <div class="winner-announcement">
+                  <h2>Player <span id="winnerNumber">1</span> Wins!</h2>
+                </div>
+                <div class="final-scores">
+                  <div class="final-score">
+                    <span class="final-label">Player 1:</span>
+                    <span class="final-value" id="player1FinalScore">0</span>
+                  </div>
+                  <div class="final-score">
+                    <span class="final-label">Player 2:</span>
+                    <span class="final-value" id="player2FinalScore">0</span>
+                  </div>
+                </div>
+                <button class="game-btn" id="endMultiplayerBtn">
+                  Return to Single Player
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="game-controls">
+            <p>Controls: Arrow keys to move, Spacebar to shoot</p>
+            <div class="controls-section">
+              <button class="game-btn" id="restartGameBtn">Restart Game</button>
+              <button class="game-btn" id="gameHistoryBtn">Game History</button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
 
+    <!-- Multiplayer mood -->
+    <div id="multiplayerView" class="multiplayer-container" style="display: none">
+      <div class="game-header">
+        <div class="player-card p1" id="player1Name">
+          <i class="fas fa-user"></i>
+          <span>Player 1</span>
+        </div>
+        <div class="score-display">
+          <div class="score">
+            <span id="score1">0</span>
+            <span class="separator">:</span>
+            <span id="score2">0</span>
+          </div>
+        </div>
+        <div class="player-card p2" id="player2Name">
+          <i class="fas fa-user"></i>
+          <span>Player 2</span>
+        </div>
+      </div>
+      <div class="game-header">
+        <div class="player-card p3" id="player3Name">
+          <i class="fas fa-user"></i>
+          <span>Player 3</span>
+        </div>
+        <div class="score-display">
+          <div class="score">
+            <span id="score3">0</span>
+            <span class="separator">:</span>
+            <span id="score4">0</span>
+          </div>
+        </div>
+        <div class="player-card p4" id="player4Name">
+          <i class="fas fa-user"></i>
+          <span>Player 4</span>
+        </div>
+      </div>
+
+      <div class="arena">
+        <div class="player"></div>
+        <div class="ball"></div>
+        <div class="half-line"></div>
+      </div>
+
+      <button id="finishGame" class="return-button">
+        <i class="fas fa-trophy"></i>
+        Return to Tournament
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
     <script src="mainpage.js"></script>
-
+    <!-- <script src=""></script> -->
     <script>
-        window.addEventListener('beforeunload', (event) => {
-            localStorage.setItem("currentView", "home");
-            // event.preventDefault();
-            // event.returnValue = '';
-        });
-        // Direct tournament interactivity test
-        document.addEventListener('DOMContentLoaded', function () {
-            // Check for tournament buttons after a delay
-            setTimeout(function () {
-                const tournamentButtons = document.querySelectorAll('#tournamentView .count-button');
+      window.addEventListener("beforeunload", (event) => {
+        localStorage.setItem("currentView", "home");
+        // event.preventDefault();
+        // event.returnValue = '';
+      });
+      // Direct tournament interactivity test
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check for tournament buttons after a delay
+        setTimeout(function () {
+          const tournamentButtons = document.querySelectorAll(
+            "#tournamentView .count-button"
+          );
 
-                // Add direct click handlers
-                tournamentButtons.forEach(button => {
-                    button.onclick = function () {
-                        // Show player inputs
-                        document.querySelector('#tournamentView .player-inputs').classList.add('show');
+          // Add direct click handlers
+          tournamentButtons.forEach((button) => {
+            button.onclick = function () {
+              // Show player inputs
+              document
+                .querySelector("#tournamentView .player-inputs")
+                .classList.add("show");
 
-                        // Generate player inputs
-                        const container = document.getElementById('players-container');
-                        container.innerHTML = '';
+              // Generate player inputs
+              const container = document.getElementById("players-container");
+              container.innerHTML = "";
 
-                        const count = parseInt(this.dataset.count);
-                        for (let i = 1; i <= count; i++) {
-                            const inputDiv = document.createElement('div');
-                            inputDiv.className = 'player-input';
-                            inputDiv.innerHTML = `<input type="text" placeholder="Player ${i} Name" class="player-name-input">`;
-                            container.appendChild(inputDiv);
-                        }
-                    };
-                });
-            }, 500);
-        });
+              const count = parseInt(this.dataset.count);
+              for (let i = 1; i <= count; i++) {
+                const inputDiv = document.createElement("div");
+                inputDiv.className = "player-input";
+                inputDiv.innerHTML = `<input type="text" placeholder="Player ${i} Name" class="player-name-input">`;
+                container.appendChild(inputDiv);
+              }
+            };
+          });
+        }, 500);
+      });
 
-        // Add direct handler for restart tournament button
-        document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(function () {
-                const restartButton = document.querySelector('.restart-tournament-btn');
-                if (restartButton) {
-                    restartButton.addEventListener('click', function () {
-                        // Clear tournament state
-                        localStorage.removeItem('tournamentState');
-                        localStorage.removeItem('matchJustCompleted');
-                        localStorage.removeItem('matchResult');
+      // Add direct handler for restart tournament button
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+          const restartButton = document.querySelector(
+            ".restart-tournament-btn"
+          );
+          if (restartButton) {
+            restartButton.addEventListener("click", function () {
+              // Clear tournament state
+              localStorage.removeItem("tournamentState");
+              localStorage.removeItem("matchJustCompleted");
+              localStorage.removeItem("matchResult");
 
-                        // Show setup section, hide tournament container
-                        const setupSection = document.querySelector('.setup-section');
-                        const tournamentContainer = document.querySelector('.tournament-container');
-                        if (setupSection) setupSection.classList.remove('hide');
-                        if (tournamentContainer) tournamentContainer.classList.remove('show');
+              // Show setup section, hide tournament container
+              const setupSection = document.querySelector(".setup-section");
+              const tournamentContainer = document.querySelector(
+                ".tournament-container"
+              );
+              if (setupSection) setupSection.classList.remove("hide");
+              if (tournamentContainer)
+                tournamentContainer.classList.remove("show");
 
-                        // Reset progress steps
-                        const steps = document.querySelectorAll('.step');
-                        steps.forEach((step, index) => {
-                            if (index === 0) {
-                                step.classList.add('active');
-                            } else {
-                                step.classList.remove('active');
-                            }
-                        });
-
-                        // Clear any player inputs
-                        const playerInputs = document.querySelector('.player-inputs');
-                        if (playerInputs) playerInputs.classList.remove('show');
-
-                        // Reset player count buttons
-                        const countButtons = document.querySelectorAll('.count-button');
-                        if (countButtons) countButtons.forEach(btn => btn.classList.remove('active'));
-                    });
+              // Reset progress steps
+              const steps = document.querySelectorAll(".step");
+              steps.forEach((step, index) => {
+                if (index === 0) {
+                  step.classList.add("active");
+                } else {
+                  step.classList.remove("active");
                 }
-            }, 500);
-        });
-    </script>
-</body>
+              });
 
+              // Clear any player inputs
+              const playerInputs = document.querySelector(".player-inputs");
+              if (playerInputs) playerInputs.classList.remove("show");
+
+              // Reset player count buttons
+              const countButtons = document.querySelectorAll(".count-button");
+              if (countButtons)
+                countButtons.forEach((btn) => btn.classList.remove("active"));
+            });
+          }
+        }, 500);
+      });
+    </script>
+  </body>
 </html>

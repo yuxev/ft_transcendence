@@ -7,7 +7,7 @@
 
 /* Apply background only to the container itself */
 .multiplayer-container {
-    background: linear-gradient(135deg, #153050, #3bb1f4, #153050, #153050, #153050, #3bb1f4, #153050);
+    /* background: linear-gradient(135deg, #153050, #3bb1f4, #153050, #153050, #153050, #3bb1f4, #153050); */
     /* min-height: 100vh; */
     margin: 0;
     font-family: 'Roboto', sans-serif;

@@ -1066,3 +1066,4 @@ window.cleanupGame = function() {
 window.resetGame = function() {
     window.Game.reset();
 };
+

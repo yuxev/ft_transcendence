@@ -129,21 +129,21 @@ function initSpaNavigation() {
         // Extract view name from hash
         let viewName = window.location.hash.replace('#/', '');
         
-        // Fix for space-shooter path to match the spaceShooterView ID
-        if (viewName === 'space-shooter') {
+        if (viewName === 'space-shooter')
             viewName = 'spaceShooter';
-        }
-        
-        if (viewName === 'game') {
+        if (viewName === 'game')
             startGame();
-        } else if (viewName === 'tournament' && window.location.hash !== '#/tournament/match') {
+        else if (viewName === 'tournament' && window.location.hash !== '/tournament/match')
             showView('tournament');
-        } else if (viewName) {
+        else if (viewName)
             showView(viewName);
-        } else {
-            // Default to home view if hash is empty
-            showView('home');
+        else if (viewName == "multiplayer")
+        {
+            console.log("this is the View name :> ", viewName);
+            showView(viewName);
         }
+        else
+            showView('home');
     });
 }
 
@@ -151,13 +151,11 @@ function showView(viewName) {
     console.log(`Switching to view: ${viewName}`);
     
     // Clean up previous view if needed
-    if (viewName !== 'game' && window.GameEngine) {
+    if (viewName !== 'game' && window.GameEngine)
         window.GameEngine.cleanup();
-    }
     
-    if (viewName !== 'spaceShooter' && window.SpaceShooter) {
+    if (viewName !== 'spaceShooter' && window.SpaceShooter)
         window.SpaceShooter.cleanup();
-    }
     
     // Hide all views
     document.querySelectorAll('.view').forEach(view => {
@@ -166,15 +164,13 @@ function showView(viewName) {
     
     // Disable all game-specific styles
     const spaceShooterStyles = document.getElementById('spaceShooterStyles');
-    if (spaceShooterStyles) {
+    if (spaceShooterStyles)
         spaceShooterStyles.media = "none";
-    }
     
     // Enable styles for current view only
     if (viewName === 'spaceShooter') {
-        if (spaceShooterStyles) {
+        if (spaceShooterStyles)
             spaceShooterStyles.media = "all";
-        }
     }
     
     // Show the requested view
@@ -190,16 +186,15 @@ function showView(viewName) {
     localStorage.setItem('currentView', viewName);
     
     // Handle specific view initialization
-    if (viewName === 'game') {
-        // Already being handled by the specific start functions
-    } else if (viewName === 'tournament') {
+
+    if (viewName === 'tournament')
         loadTournamentResources();
-    } else if (viewName === 'spaceShooter') {
+    else if (viewName === 'spaceShooter')
         startSpaceShooter();
-    } else if (viewName === 'profile') {
-        // Update profile info
+    else if (viewName === 'profile')
         updateProfileInfo();
-    }
+    else if (viewName === 'multiplayer')
+        LoadMultiPlayerMood();
     
     // Update active state in navigation
     document.querySelectorAll('.spa-link').forEach(link => {
@@ -209,6 +204,75 @@ function showView(viewName) {
             link.classList.add('active');
         }
     });
+}
+
+function appendAndRunGameScript() {
+    // Create a new script element
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+
+    // Define the script content
+    script.textContent = `
+        // Initialize game when loaded directly
+        console.log("zebiiii");
+        window.addEventListener('load', () => {
+            if (window.Game) {
+                window.Game.init();
+            }
+        });
+    `;
+
+    // Append the script to the document body
+    document.body.appendChild(script);
+
+    console.log("Game initialization script added and executed.");
+}
+
+
+function LoadMultiPlayerMood() {
+    console.log("Loading multiplayer resources");
+    
+    // Load tournament CSS
+    // if (!document.getElementById('tournamentCssLoaded')) {
+    //     const tournamentCss = document.createElement('link');
+    //     tournamentCss.id = 'tournamentCssLoaded';
+    //     tournamentCss.rel = 'stylesheet';
+    //     tournamentCss.href = '../tournament/tournament.css';
+    //     document.head.appendChild(tournamentCss);
+    // }
+    
+    // Load multiplayer JS
+    if (!window.multiplayerInitialized) {
+        const multipscript = document.createElement('script');
+        multipscript.src = '../myultiPlayerGmae/main.js';
+        multipscript.onload = function() {
+            console.log("multiplayer script loaded");
+            window.multiplayerInitialized = true;
+            
+            // Initialize multiplayer after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                if (typeof window.setupmultiplayerDirectly === 'function') {
+                    console.log("Initializing multiplayer directly");
+                    window.setupmultiplayerDirectly();
+                }
+                
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }, 100);
+        };
+        document.body.appendChild(multipscript);
+    } else {
+        // Scripts already loaded, just call the callback
+        if (typeof window.setupmultiplayerDirectly === 'function') {
+            window.setupmultiplayerDirectly();
+        }
+        
+        if (typeof callback === 'function') {
+            setTimeout(callback, 10);
+        }
+    }
+    appendAndRunGameScript();
 }
 
 function updateUserProfile(userData) {
@@ -225,12 +289,9 @@ function updateUserProfile(userData) {
         // Get user info from backend if we don't have it
         fetchUserInfo();
     }
-    
     // Update avatar if available
-    if (userAvatar && userData.image_url) {
+    if (userAvatar && userData.image_url)
         userAvatar.src = userData.image_url;
-    }
-
     // Update language buttons when profile is updated
     updateLanguageButtons();
 }
