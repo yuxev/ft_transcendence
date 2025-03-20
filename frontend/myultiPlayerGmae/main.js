@@ -2,6 +2,7 @@
 window.GameEngine = {
         initialized: false,
         finished: false,
+        handlers: {}, // Initialize the handlers object
 
         // Add game variables
         gameVars: {
@@ -12,6 +13,8 @@ window.GameEngine = {
             aiError: 0,
             // Arenaleft: parseInt(window.getComputedStyle(arena).left),
             MAX_ANGLE: 5 * Math.PI / 12,
+            gameStarted: false,  // Track if game has started
+            countdownActive: false, // Track if countdown is active
             // Add fixed dimensions
         },
         dimensions: {
@@ -88,6 +91,9 @@ window.GameEngine = {
             // Setup controls
             this.setupControls();
 
+            // Setup start screen
+            this.setupStartScreen();
+
             // Mark as initialized
             this.initialized = true;
             
@@ -110,7 +116,9 @@ window.GameEngine = {
             player2Name: document.querySelector('#player2Name span'),
             player3Name: document.querySelector('#player3Name span'),
             player4Name: document.querySelector('#player4Name span'),
-            finishButton: document.getElementById('finishGame')
+            finishButton: document.getElementById('finishGame'),
+            startScreen: null,
+            countdown: null
         };
         
         // Hide finish button initially
@@ -753,18 +761,19 @@ window.GameEngine = {
         startGameLoop: function() {
         if (!this.initialized) return;
 
-        // for (const player of this.gameObjects.players) {
-        //     this.detectType(player);
-        // }
-
-        this.detectType(this.gameObjects.p1);
-        this.detectType(this.gameObjects.p2);
-        this.detectType(this.gameObjects.p3);
-        this.detectType(this.gameObjects.p4);
-
-        this.gameObjects.ball.moveBall(this.gameObjects.p1, this.gameObjects.p2,
-            this.gameObjects.p3, this.gameObjects.p4);
-        requestAnimationFrame(() => this.startGameLoop());
+        // Only run game logic if game has started
+        if (this.gameVars.gameStarted) {
+            this.detectType(this.gameObjects.p1);
+            this.detectType(this.gameObjects.p2);
+            this.detectType(this.gameObjects.p3);
+            this.detectType(this.gameObjects.p4);
+            
+            this.gameObjects.ball.moveBall(this.gameObjects.p1, this.gameObjects.p2,
+                this.gameObjects.p3, this.gameObjects.p4);
+        }
+        
+        // Always request next frame
+        this.animationId = requestAnimationFrame(() => this.startGameLoop());
         },
         
         setupControls: function() {
@@ -777,6 +786,84 @@ window.GameEngine = {
                     }
                 });
             }
+        },
+        
+        setupStartScreen: function() {
+            // Create start screen overlay
+            this.elements.startScreen = document.createElement('div');
+            this.elements.startScreen.className = 'start-screen';
+            this.elements.startScreen.innerHTML = `
+                <div class="start-message">
+                    <h2>Ready to Play?</h2>
+                    <p>Press <span class="key-highlight">SPACE</span> to start</p>
+                </div>
+            `;
+            
+            // Create countdown element (initially hidden)
+            this.elements.countdown = document.createElement('div');
+            this.elements.countdown.className = 'countdown';
+            this.elements.countdown.style.display = 'none';
+            
+            // Add to arena
+            if (this.elements.arena) {
+                this.elements.arena.appendChild(this.elements.startScreen);
+                this.elements.arena.appendChild(this.elements.countdown);
+            }
+            
+            // Add space key listener
+            this.handlers.startGame = (e) => {
+                if (e.code === 'Space' && !this.gameVars.gameStarted && !this.gameVars.countdownActive) {
+                    e.preventDefault(); // Prevent page scrolling
+                    this.startCountdown();
+                }
+            };
+            
+            document.addEventListener('keydown', this.handlers.startGame);
+        },
+
+        startCountdown: function() {
+            console.log("Starting countdown!"); // Add debug log
+            this.gameVars.countdownActive = true;
+            
+            // Hide start screen
+            if (this.elements.startScreen) {
+                this.elements.startScreen.style.display = 'none';
+            }
+            
+            // Show countdown
+            if (this.elements.countdown) {
+                this.elements.countdown.style.display = 'flex';
+                this.elements.countdown.textContent = "3"; // Set initial text
+            }
+            
+            let count = 3;
+            
+            // Start countdown interval
+            const countdownInterval = setInterval(() => {
+                count--;
+                console.log("Countdown:", count); // Add debug log
+                
+                if (count >= 0) {
+                    // Update countdown display
+                    if (this.elements.countdown) {
+                        this.elements.countdown.textContent = count.toString();
+                    }
+                } else {
+                    // Countdown complete
+                    clearInterval(countdownInterval);
+                    
+                    // Hide countdown
+                    if (this.elements.countdown) {
+                        this.elements.countdown.style.display = 'none';
+                    }
+                    
+                    // Start the game
+                    this.gameVars.gameStarted = true;
+                    this.gameVars.countdownActive = false;
+                    
+                    console.log("Game started!");
+                }
+            }, 1000);
         },
         
         cleanup: function() {
@@ -801,6 +888,9 @@ window.GameEngine = {
         if (this.handlers.keydownEscape) {
             document.removeEventListener('keydown', this.handlers.keydownEscape);
         }
+        if (this.handlers.startGame) {
+            document.removeEventListener('keydown', this.handlers.startGame);
+        }
         if (this.handlers.finish && this.elements && this.elements.finishButton) {
             this.elements.finishButton.removeEventListener('click', this.handlers.finish);
         }
@@ -813,6 +903,8 @@ window.GameEngine = {
             WINNING_SCORE: 5,
             MAX_ANGLE: 5 * Math.PI / 12,
             aiError: 0,
+            gameStarted: false,
+            countdownActive: false,
         };
         
         // Reset flags and references
@@ -821,8 +913,16 @@ window.GameEngine = {
         this.gameObjects = null;
         this.handlers = {};
         
-        // Reset UI elements if they exist
+        // Remove start screen and countdown if they exist
         if (this.elements) {
+            if (this.elements.startScreen) {
+                this.elements.startScreen.remove();
+            }
+            if (this.elements.countdown) {
+                this.elements.countdown.remove();
+            }
+            
+            // Reset other UI elements
             if (this.elements.finishButton) {
                 this.elements.finishButton.style.display = 'none';
             }
@@ -954,7 +1054,6 @@ window.Game = {
 };
 
 // Export game functions to window
-
 
 window.initializeGame = function() {
     window.Game.init();
