@@ -1,0 +1,79 @@
+name: ft_transcendence
+
+services:
+
+    frontend:
+        build:
+            context: frontend/
+        image: frontend:transcendence
+        container_name: frontend
+        volumes:
+            - static_files:/app/staticfiles
+        networks:
+            transcendence_network:
+        ports:
+            - 3000:3000/tcp
+        restart: always
+        depends_on:
+            backend:
+                condition: service_healthy
+
+    backend:
+        build:
+            context: backend/
+        image: backend:transcendence
+        container_name: backend
+        volumes:
+            - static_files:/app/staticfiles
+        networks:
+            transcendence_network:
+        ports:
+            - 8000:8000/tcp
+        env_file:
+          - path: .env
+            required: true
+        command: >
+            sh -c "python manage.py migrate &&
+            gunicorn auth.wsgi:application --bind 0.0.0.0:8000"
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/admin"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        depends_on:
+            database:
+                condition: service_healthy
+        restart: always
+
+
+    database:  
+        image: postgres:17.4-alpine3.21
+        container_name: postgres_db
+        volumes:
+            - database_files:/var/lib/postgresql/data
+        networks:
+            transcendence_network:
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        restart: always
+
+volumes:
+    static_files:
+    database_files:
+      driver: local
+      driver_opts:
+          device: /home/amehdikh/post
+          type: none
+          o: bind
+
+networks:
+    transcendence_network:
+        name: transcendence_network
+        driver: bridge
