@@ -6,7 +6,7 @@
 #    By: ael-khel <ael-khel@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/16 05:26:34 by ael-khel          #+#    #+#              #
-#    Updated: 2025/03/21 04:02:22 by ael-khel         ###   ########.fr        #
+#    Updated: 2025/03/21 05:18:01 by ael-khel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ RUN apk update && apk upgrade && apk add --no-cache \
 # Copy the Nginx configuration file
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-COPY srcs /srcs
+COPY app /app
 
 # Expose the Nginx port
 EXPOSE 3000/tcp
