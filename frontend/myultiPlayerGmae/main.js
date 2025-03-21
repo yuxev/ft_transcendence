@@ -1,5 +1,8 @@
 // Only create Game if it doesn't exist
+var container = document.querySelector(".multiplayer-container");
+console.log(container);
 window.GameEngine = {
+    
         initialized: false,
         finished: false,
         handlers: {}, // Initialize the handlers object
@@ -31,13 +34,13 @@ window.GameEngine = {
             console.log('Clearing all game elements');
         
         // Remove all players
-        const playerElements = document.querySelectorAll('.arena .player');
+        const playerElements = container.querySelectorAll('.arena .player');
         playerElements.forEach(element => {
             element.remove();
         });
         
         // Remove all balls
-        const ballElements = document.querySelectorAll('.arena .ball');
+        const ballElements = container.querySelectorAll('.arena .ball');
         ballElements.forEach(element => {
             element.remove();
         });
@@ -56,7 +59,7 @@ window.GameEngine = {
         if (options.onGameOver) this.onGameOver = options.onGameOver;
         
         // Make sure required elements exist
-        if (!document.querySelector('.arena')) {
+        if (!container.querySelector('.arena')) {
             console.log('Game elements not ready, waiting...');
             setTimeout(() => this.init(options), 100);
             return;
@@ -102,20 +105,19 @@ window.GameEngine = {
 
             return this; // For chaining
         },
-
         getElements: function() {
         this.elements = {
-            player: document.querySelector(".player"),
-            arena: document.querySelector(".arena"),
-            ball: document.querySelector(".ball"),
-            player1Score: document.querySelector('#score1'),
-            player2Score: document.querySelector('#score2'),
-            player3Score: document.querySelector('#score3'),
-            player4Score: document.querySelector('#score4'),
-            player1Name: document.querySelector('#player1Name span'),
-            player2Name: document.querySelector('#player2Name span'),
-            player3Name: document.querySelector('#player3Name span'),
-            player4Name: document.querySelector('#player4Name span'),
+            player: container.querySelector(".player"),
+            arena: container.querySelector(".arena"),
+            ball: container.querySelector(".ball"),
+            player1Score: container.querySelector('#score1'),
+            player2Score: container.querySelector('#score2'),
+            player3Score: container.querySelector('#score3'),
+            player4Score: container.querySelector('#score4'),
+            player1Name: container.querySelector('#player1Name span'),
+            player2Name: container.querySelector('#player2Name span'),
+            player3Name: container.querySelector('#player3Name span'),
+            player4Name: container.querySelector('#player4Name span'),
             finishButton: document.getElementById('finishGame'),
             startScreen: null,
             countdown: null
@@ -1020,7 +1022,7 @@ window.Game = {
         
         // Get player names
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        const player1 = userData.name || document.getElementById('userName')?.textContent || 'Player 1';
+        const player1 = userData.name ||document.getElementById('userName')?.textContent || 'Player 1';
         
         // Initialize the game engine with standard settings
         window.GameEngine.init({
@@ -1067,3 +1069,8 @@ window.resetGame = function() {
     window.Game.reset();
 };
 
+window.addEventListener('click', () => {
+    if (window.Game) {
+        window.Game.init();
+    }
+});
