@@ -366,6 +366,7 @@ window.GameEngine = {
                     return;
 
                     document.addEventListener('keydown', (event) => {
+                        event.preventDefault(); 
                         if (event.key === this.keyUP) {
                             this.Move = -1;
                         } else if (event.key === this.keyDown) {
@@ -374,6 +375,7 @@ window.GameEngine = {
                     });
                 
                     document.addEventListener('keyup', (event) => {
+                        event.preventDefault(); 
                         if (event.key === this.keyUP && this.Move === -1) {
                             this.Move = 0;
                         } else if (event.key === this.keyDown && this.Move === 1) {
