@@ -512,18 +512,22 @@ window.GameEngine = {
         this.handlers.keydown = (event) => {
             if (event.key === 'w') {
                 if (this.gameObjects && this.gameObjects.p1) {
+                	event.preventDefault(); // Prevent page scrolling
                     this.gameObjects.p1.MoveUp = true;
                 }
             } else if (event.key === 's') {
                 if (this.gameObjects && this.gameObjects.p1) {
+                	event.preventDefault(); // Prevent page scrolling
                     this.gameObjects.p1.MoveDown = true;
                 }
             } else if (event.key === 'ArrowUp') {
                 if (this.gameObjects && this.gameObjects.p2) {
+                	event.preventDefault(); // Prevent page scrolling
                     this.gameObjects.p2.MoveUp = true;
                 }
             } else if (event.key === 'ArrowDown') {
                 if (this.gameObjects && this.gameObjects.p2) {
+                	event.preventDefault(); // Prevent page scrolling
                     this.gameObjects.p2.MoveDown = true;
                 }
             }

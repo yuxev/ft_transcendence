@@ -753,8 +753,8 @@ window.GameEngine = {
             player.moveComputer(this.gameObjects.ball);
             }
             else{
-            if(player.zone) player.movePlayerHorizontal();
-            else player.movePlayer();
+				if(player.zone) player.movePlayerHorizontal();
+				else player.movePlayer();
             }
         },
         
