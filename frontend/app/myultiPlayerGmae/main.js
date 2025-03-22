@@ -1,6 +1,4 @@
-// Only create Game if it doesn't exist
 var container = document.querySelector(".multiplayer-container");
-console.log(container);
 window.GameEngine = {
     
         initialized: false,
@@ -1069,8 +1067,5 @@ window.resetGame = function() {
     window.Game.reset();
 };
 
-window.addEventListener('click', () => {
-    if (window.Game) {
-        window.Game.init();
-    }
-});
+if (window.Game) 
+    window.Game.init();

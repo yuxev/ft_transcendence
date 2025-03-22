@@ -10,6 +10,8 @@ window.GameEngine = {
         WINNING_SCORE: 5,
         MAX_ANGLE: 5 * Math.PI / 12,
         angle: -Math.PI / 7,
+        gameStarted: false,
+        countdownActive: false,
     },
     
     // Game dimensions
@@ -89,6 +91,8 @@ window.GameEngine = {
         // Setup controls
         this.setupControls();
         
+        // Setup start screen
+        this.setupStartScreen();
         // Mark as initialized
         this.initialized = true;
         
@@ -108,7 +112,9 @@ window.GameEngine = {
             computerScore: document.querySelector('#score2'),
             player1Name: document.querySelector('#player1Name span'),
             player2Name: document.querySelector('#player2Name span'),
-            finishButton: document.getElementById('finishGame')
+            finishButton: document.getElementById('finishGame'),
+            startScreen: null,
+            countdown: null
         };
         
         // Hide finish button initially
@@ -117,6 +123,85 @@ window.GameEngine = {
         }
     },
     
+    setupStartScreen: function() {
+        // Create start screen overlay
+        this.elements.startScreen = document.createElement('div');
+        this.elements.startScreen.className = 'start-screen';
+        this.elements.startScreen.innerHTML = `
+            <div class="start-message">
+                <h2>Ready to Play?</h2>
+                <p>Press <span class="key-highlight">SPACE</span> to start</p>
+            </div>
+        `;
+        
+        // Create countdown element (initially hidden)
+        this.elements.countdown = document.createElement('div');
+        this.elements.countdown.className = 'countdown';
+        this.elements.countdown.style.display = 'none';
+        
+        // Add to arena
+        if (this.elements.arena) {
+            this.elements.arena.appendChild(this.elements.startScreen);
+            this.elements.arena.appendChild(this.elements.countdown);
+        }
+        
+        // Add space key listener
+        this.handlers.startGame = (e) => {
+            if (e.code === 'Space' && !this.gameVars.gameStarted && !this.gameVars.countdownActive) {
+                e.preventDefault(); // Prevent page scrolling
+                this.startCountdown();
+            }
+        };
+        
+        document.addEventListener('keydown', this.handlers.startGame);
+    },
+
+    startCountdown: function() {
+        console.log("Starting countdown!"); // Add debug log
+        this.gameVars.countdownActive = true;
+        
+        // Hide start screen
+        if (this.elements.startScreen) {
+            this.elements.startScreen.style.display = 'none';
+        }
+        
+        // Show countdown
+        if (this.elements.countdown) {
+            this.elements.countdown.style.display = 'flex';
+            this.elements.countdown.textContent = "3"; // Set initial text
+        }
+        
+        let count = 3;
+        
+        // Start countdown interval
+        const countdownInterval = setInterval(() => {
+            count--;
+            console.log("Countdown:", count); // Add debug log
+            
+            if (count >= 0) {
+                // Update countdown display
+                if (this.elements.countdown) {
+                    this.elements.countdown.textContent = count.toString();
+                }
+            } else {
+                // Countdown complete
+                clearInterval(countdownInterval);
+                
+                // Hide countdown
+                if (this.elements.countdown) {
+                    this.elements.countdown.style.display = 'none';
+                }
+                
+                // Start the game
+                this.gameVars.gameStarted = true;
+                this.gameVars.countdownActive = false;
+                
+                console.log("Game started!");
+            }
+        }, 1000);
+    },
+    
+
     // Set player names
     setupPlayerNames: function(player1, player2) {
         console.log(`Setting up game with players: ${player1} vs ${player2}`);
@@ -233,6 +318,8 @@ window.GameEngine = {
             }
         };
         
+        
+
         // Create the ball
         const ball = document.createElement('div');
         ball.className = 'ball';
@@ -401,24 +488,22 @@ window.GameEngine = {
     startGameLoop: function() {
         // Check if game is still initialized (not cleaned up)
         if (!this.initialized) return;
-        
-        // Move players
-        if (this.gameObjects && this.gameObjects.p1) {
-            this.gameObjects.p1.movePlayer();
+        if (this.gameVars.gameStarted) 
+        {
+            // Move players
+            if (this.gameObjects && this.gameObjects.p1)
+                this.gameObjects.p1.movePlayer();
+            if (this.gameObjects && this.gameObjects.p2) 
+                this.gameObjects.p2.movePlayer();
+            
+            // Move ball
+            if (this.gameObjects && this.gameObjects.ball)
+                this.gameObjects.ball.moveBall(this.gameObjects.p1, this.gameObjects.p2);
+            
         }
-        if (this.gameObjects && this.gameObjects.p2) {
-            this.gameObjects.p2.movePlayer();
-        }
-        
-        // Move ball
-        if (this.gameObjects && this.gameObjects.ball) {
-            this.gameObjects.ball.moveBall(this.gameObjects.p1, this.gameObjects.p2);
-        }
-        
         // Continue animation loop if not finished
-        if (!this.finished) {
+        if (!this.finished)
             this.animationId = requestAnimationFrame(() => this.startGameLoop());
-        }
     },
     
     // Setup control buttons
@@ -496,6 +581,13 @@ window.GameEngine = {
         // Clear any game elements
         this.clearGameElements();
         
+
+        if (this.elements) {
+            if (this.elements.startScreen)
+                this.elements.startScreen.remove();
+            if (this.elements.countdown) 
+                this.elements.countdown.remove();
+        }
         // Cancel animation frame
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);

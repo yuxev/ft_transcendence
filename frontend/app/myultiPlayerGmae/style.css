@@ -7,13 +7,11 @@
 
 /* Apply background only to the container itself */
 .multiplayer-container {
-    /* min-height: 100vh; */
     margin: 0;
     font-family: 'Roboto', sans-serif;
     color: #fff;
-    /* max-width: 1400px; */
     margin: 0 auto;
-    padding: 2rem;
+    padding: 7rem;
 }
 
 /* Game Header */

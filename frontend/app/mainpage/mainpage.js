@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Initializing application...');
     
     // Check authentication
-    const jwt = localStorage.getItem('jwt');
-    if (!jwt) {
-        window.location.href = '/index.html';
-        return;
-    }
+    // const jwt = localStorage.getItem('jwt');
+    // if (!jwt) {
+    //     window.location.href = '/index.html';
+    //     return;
+    // }
     
     // Get user data from localStorage
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');

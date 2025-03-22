@@ -144,6 +144,69 @@ body {
     box-shadow: 0 6px 20px rgba(199, 0, 130, 0.3);
 }
 
+#gameView .start-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    border-radius: 25px;
+}
+
+#gameView .start-message {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 20, 40, 0.8);
+    border-radius: 15px;
+    border: 1px solid rgba(100, 180, 255, 0.3);
+    box-shadow: 0 0 30px rgba(0, 120, 255, 0.3);
+}
+
+#gameView .start-message h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #00ccff;
+    text-shadow: 0 0 10px rgba(0, 204, 255, 0.7);
+}
+
+#gameView .start-message p {
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+#gameView .key-highlight {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    color: #00ccff;
+}
+
+/* Countdown */
+#gameView .countdown {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8rem;
+    font-weight: bold;
+    color: #00ccff;
+    text-shadow: 0 0 20px rgba(0, 204, 255, 0.9);
+} 
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .arena {
