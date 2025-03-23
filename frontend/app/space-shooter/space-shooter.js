@@ -1,4 +1,8 @@
 // Initialize the space shooter game
+window.addEventListener('keydown', (e)=> {
+    if (e.key == 'r' && localStorage.getItem('currentView') == 'spaceShooter')
+        e.preventDefault();
+})
 window.SpaceShooter = {
     init: function() {
         console.log("Initializing Space Shooter game");
@@ -782,7 +786,11 @@ window.SpaceShooter = {
             // Single player controls
             if (e.key === "ArrowLeft") keys.left = true;
             if (e.key === "ArrowRight") keys.right = true;
-            if (e.key === " ") keys.shoot = true;
+            if (e.key === " ")
+            {
+                e.preventDefault();
+                keys.shoot = true;
+            }
             
             // Player 1 controls (A, D, W)
             if (e.key === "a" || e.key === "A") keys.p1Left = true;
@@ -834,6 +842,28 @@ window.SpaceShooter = {
         
         // Function to reset game
         function resetGame() {
+            if (document.getElementById("gameModeSelection").style.display == 'block')
+                return;
+            gameActive = true;
+            player.hp = 3;
+            document.getElementById("hp").textContent = player.hp;
+            score = 0;
+            if (document.getElementById("score")) {
+                document.getElementById("score").textContent = score;
+            }
+            
+            // Clear game objects
+            bullets.length = 0;
+            bombs.length = 0;
+            powerUps.length = 0;
+            particles.length = 0;
+            
+            // Reset player position
+            player.x = canvas.width / 2 - player.width / 2;
+            player.y = canvas.height - player.height - 30;
+            
+            // Hide game over screen if it's visible
+            document.getElementById("gameOver").style.display = "none";
             // Implementation for resetting the game
         }
         
@@ -889,12 +919,36 @@ window.SpaceShooter = {
         }
         
         document.getElementById("restartBtn").addEventListener("click", () => {
-            location.reload();
+                // Reset game state
+            if (document.getElementById("gameModeSelection").style.display == 'block')
+                return;
+            gameActive = true;
+            player.hp = 3;
+            document.getElementById("hp").textContent = player.hp;
+            score = 0;
+            if (document.getElementById("score")) {
+                document.getElementById("score").textContent = score;
+            }
+            
+            // Clear game objects
+            bullets.length = 0;
+            bombs.length = 0;
+            powerUps.length = 0;
+            particles.length = 0;
+            
+            // Reset player position
+            player.x = canvas.width / 2 - player.width / 2;
+            player.y = canvas.height - player.height - 30;
+            
+            // Hide game over screen if it's visible
+            document.getElementById("gameOver").style.display = "none";
         });
         
         // Add event listener for the additional restart button in the game controls
         document.getElementById("restartGameBtn").addEventListener("click", () => {
             // Reset game state
+            if (document.getElementById("gameModeSelection").style.display == 'block')
+                return;
             gameActive = true;
             player.hp = 3;
             document.getElementById("hp").textContent = player.hp;
@@ -922,7 +976,10 @@ window.SpaceShooter = {
             isMultiplayerMode = false;
             document.getElementById('multiplayerHUD').style.display = 'none';
             document.getElementById('winnerPanel').style.display = 'none';
-            resetGame();
+            window.SpaceShooter.cleanup();
+            // startMultiplayerGame();
+            // document.getElementById("restartGameBtn").click();
+            // resetGame();
         });
         
         function update() {

@@ -137,11 +137,6 @@ function initSpaNavigation() {
             showView('tournament');
         else if (viewName)
             showView(viewName);
-        else if (viewName == "multiplayer")
-        {
-            console.log("this is the View name :> ", viewName);
-            showView(viewName);
-        }
         else
             showView('home');
     });
@@ -206,42 +201,13 @@ function showView(viewName) {
     });
 }
 
-function appendAndRunGameScript() {
-    // Create a new script element
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-
-    // Define the script content
-    script.textContent = `
-        // Initialize game when loaded directly
-        console.log("zebiiii");
-        window.addEventListener('load', () => {
-            if (window.Game) {
-                window.Game.init();
-            }
-        });
-    `;
-
-    // Append the script to the document body
-    document.body.appendChild(script);
-
-    console.log("Game initialization script added and executed.");
-}
 
 
 function LoadMultiPlayerMood() {
     console.log("Loading multiplayer resources");
     
-    // Load tournament CSS
-    // if (!document.getElementById('tournamentCssLoaded')) {
-    //     const tournamentCss = document.createElement('link');
-    //     tournamentCss.id = 'tournamentCssLoaded';
-    //     tournamentCss.rel = 'stylesheet';
-    //     tournamentCss.href = '../tournament/tournament.css';
-    //     document.head.appendChild(tournamentCss);
-    // }
-    
     // Load multiplayer JS
+    localStorage.setItem('currentView', 'multiplayer');
     if (!window.multiplayerInitialized) {
         const multipscript = document.createElement('script');
         multipscript.src = '../myultiPlayerGmae/main.js';
@@ -272,7 +238,6 @@ function LoadMultiPlayerMood() {
             setTimeout(callback, 10);
         }
     }
-    appendAndRunGameScript();
 }
 
 function updateUserProfile(userData) {

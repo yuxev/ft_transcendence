@@ -1,3 +1,8 @@
+window.addEventListener('keydown', (e)=>{
+    if (e.key == 'r' && localStorage.getItem('currentView') == 'game')
+    e.preventDefault();
+})
+
 // PONG Game Core Engine
 window.GameEngine = {
     initialized: false,
@@ -45,6 +50,18 @@ window.GameEngine = {
         ballElements.forEach(element => {
             element.remove();
         });
+    },
+
+    showWinnerAnimation: function(playerName) {
+        this.elements.startScreen = document.createElement('div');
+        this.elements.startScreen.className = 'start-screen';
+        this.elements.startScreen.innerHTML = `
+            <div class="start-message">
+                <h2>Game Over!</h2>
+                <p>Winner is <span class="key-highlight">${playerName}</span></p>
+            </div>
+        `;
+        this.elements.arena.appendChild(this.elements.startScreen);
     },
     
     // Initialize core game engine
@@ -212,20 +229,15 @@ window.GameEngine = {
         // Clear any existing content first to prevent duplication
         if (this.elements.player1Name) {
             this.elements.player1Name.innerHTML = '';
-            const p1Icon = document.createElement('i');
-            p1Icon.className = 'fas fa-user';
-            this.elements.player1Name.appendChild(p1Icon);
             
             const p1Text = document.createElement('span');
             p1Text.textContent = player1 || 'Player 1';
             this.elements.player1Name.appendChild(p1Text);
+            
         }
         
         if (this.elements.player2Name) {
             this.elements.player2Name.innerHTML = '';
-            const p2Icon = document.createElement('i');
-            p2Icon.className = 'fas fa-user';
-            this.elements.player2Name.appendChild(p2Icon);
             
             const p2Text = document.createElement('span');
             p2Text.textContent = player2 || 'Player 2';
@@ -236,7 +248,7 @@ window.GameEngine = {
     // Game over handler - can be overridden
     onGameOver: function(winner, score1, score2) {
         console.log(`Game over. Winner: ${winner}, Score: ${score1}-${score2}`);
-        
+        console.log(`Game over2. Winner: ${winner}, Score: ${score1}-${score2}`);
         // Show finish button
         if (this.elements.finishButton) {
             this.elements.finishButton.style.display = 'flex';
@@ -273,7 +285,7 @@ window.GameEngine = {
             height: paddleHeight,
             score: 0,
             Move: 0,
-            isComputer: 0,
+            isComputer: 1,
             errMargin: 50,
             thikingTime: Date.now(),
             goal: this.dimensions.arenaHeight / 2,
@@ -338,13 +350,11 @@ window.GameEngine = {
             goal: this.dimensions.arenaHeight / 2,
             movePlayer: function() {
                 // Move player based on controls
-                if (this.Move === 1 && this.y > 0) {
+                if (this.Move === 1 && this.y > 0)
                     this.y -= 10;
-                }
-                if (this.Move === -1 && this.y < (arenaHeight - paddleHeight)) {
+                if (this.Move === -1 && this.y < (arenaHeight - paddleHeight))
                     this.y += 10;
-                }
-                
+
                 // Update DOM element position
                 this.element.style.top = this.y + 'px';
             },
@@ -527,8 +537,9 @@ window.GameEngine = {
                     
                     // Check win condition
                     if (p2.score >= window.GameEngine.gameVars.WINNING_SCORE) {
+                        window.GameEngine.showWinnerAnimation(window.GameEngine.elements.player2Name.textContent);
                         window.GameEngine.finished = true;
-                        window.GameEngine.onGameOver('Player 2', p1.score, p2.score);
+                        // window.GameEngine.onGameOver('Player 2', p1.score, p2.score);
                     }
                 }
 
@@ -552,18 +563,18 @@ window.GameEngine = {
                     // Check win condition
                     if (p1.score >= window.GameEngine.gameVars.WINNING_SCORE) {
                         window.GameEngine.finished = true;
-                        window.GameEngine.onGameOver('Player 1', p1.score, p2.score);
+                        window.GameEngine.showWinnerAnimation(window.GameEngine.elements.player1Name.textContent);
+
+                        // window.GameEngine.onGameOver('Player 1', p1.score, p2.score);
                     }
                 }
             },
 
             ajustdiff: function(p1, p2){
-                if(p1.isComputer){
-                p1.errMargin = (window.GameEngine.gameVars.WINNING_SCORE - (p1.score - p2.score)) * 50 / window.GameEngine.gameVars.WINNING_SCORE;
-                }
-                if(p2.isComputer){
-                p2.errMargin = (window.GameEngine.gameVars.WINNING_SCORE - (p2.score - p1.score)) * 50 / window.GameEngine.gameVars.WINNING_SCORE;
-                }
+                if(p1.isComputer)
+                    p1.errMargin = (window.GameEngine.gameVars.WINNING_SCORE - (p1.score - p2.score)) * 50 / window.GameEngine.gameVars.WINNING_SCORE;
+                if(p2.isComputer)
+                    p2.errMargin = (window.GameEngine.gameVars.WINNING_SCORE - (p2.score - p1.score)) * 50 / window.GameEngine.gameVars.WINNING_SCORE;
             },
             
             resetBall: function(scorer) {
@@ -600,30 +611,30 @@ window.GameEngine = {
     startGameLoop: function() {
         // Check if game is still initialized (not cleaned up)
         if (!this.initialized) return;
-        
-        // Move players
-        if (this.gameObjects && this.gameObjects.p1) {
-            if(this.gameObjects.p1.isComputer)
-                this.gameObjects.p1.moveComputer(this.gameObjects.ball);
-            else
-                this.gameObjects.p1.movePlayer();
+        if (this.gameVars.gameStarted) 
+        {
+            // Move players
+            if (this.gameObjects && this.gameObjects.p1) {
+                if(this.gameObjects.p1.isComputer)
+                    this.gameObjects.p1.moveComputer(this.gameObjects.ball);
+                else
+                    this.gameObjects.p1.movePlayer();
+            }
+            if (this.gameObjects && this.gameObjects.p2) {
+                if(this.gameObjects.p2.isComputer)
+                    this.gameObjects.p2.moveComputer(this.gameObjects.ball);
+                else
+                    this.gameObjects.p2.movePlayer();
+            }
+            
+            // Move ball
+            if (this.gameObjects && this.gameObjects.ball)
+                this.gameObjects.ball.moveBall(this.gameObjects.p1, this.gameObjects.p2);
+            
         }
-        if (this.gameObjects && this.gameObjects.p2) {
-            if(this.gameObjects.p2.isComputer)
-                this.gameObjects.p2.moveComputer(this.gameObjects.ball);
-            else
-                this.gameObjects.p2.movePlayer();
-        }
-        
-        // Move ball
-        if (this.gameObjects && this.gameObjects.ball) {
-            this.gameObjects.ball.moveBall(this.gameObjects.p1, this.gameObjects.p2);
-        }
-        
         // Continue animation loop if not finished
-        if (!this.finished) {
+        if (!this.finished)
             this.animationId = requestAnimationFrame(() => this.startGameLoop());
-        }
     },
     
     // Setup control buttons
@@ -732,6 +743,7 @@ window.GameEngine = {
             score2: 0,
             WINNING_SCORE: 5,
             MAX_ANGLE: 5 * Math.PI / 12,
+            milliseconds: 1000,
             angle: -Math.PI/7,
         };
         

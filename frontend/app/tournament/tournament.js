@@ -1,4 +1,8 @@
 // Tournament System
+window.addEventListener('keydown', (e)=> {
+    if (e.key == 'r' && localStorage.getItem('currentView') == 'tournament')
+        e.preventDefault();
+})
 const Tournament = {
     // Tournament state
     state: {

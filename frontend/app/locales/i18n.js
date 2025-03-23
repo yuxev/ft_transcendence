@@ -23,7 +23,7 @@ const I18n = {
   
   // Load translations for a specific language
   loadTranslations: function(language) {
-    fetch(`/locales/${language}.json`)
+    fetch(`../locales/${language}.json`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`Failed to load translations for ${language}`);

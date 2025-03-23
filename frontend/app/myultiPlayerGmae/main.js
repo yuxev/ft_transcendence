@@ -1,6 +1,15 @@
 var container = document.querySelector(".multiplayer-container");
+var FinishMultGame = document.getElementById("finishMultiGameEngine");
+FinishMultGame.addEventListener('click', ()=>{
+    window.MultiGameEngine.cleanup();
+    window.showView && window.showView('home');
+})
+document.getElementById("multiplayerView").addEventListener('click', ()=>{
+    window.MultiGameEngine.init();
+    window.showView && window.showView('multiplayer');
+})
 // Only create Game if it doesn't exist
-window.GameEngine = {
+window.MultiGameEngine = {
     
         initialized: false,
         finished: false,
@@ -706,16 +715,16 @@ window.GameEngine = {
                     return;
                     switch(player.id) {
                     case 1:
-                        window.GameEngine.elements.player1Score.textContent = player.addScore();
+                        window.MultiGameEngine.elements.player1Score.textContent = player.addScore();
                         break;
                     case 2:
-                        window.GameEngine.elements.player2Score.textContent = player.addScore();
+                        window.MultiGameEngine.elements.player2Score.textContent = player.addScore();
                         break;
                     case 3:
-                        window.GameEngine.elements.player3Score.textContent = player.addScore();
+                        window.MultiGameEngine.elements.player3Score.textContent = player.addScore();
                         break;
                     case 4:
-                        window.GameEngine.elements.player4Score.textContent = player.addScore();
+                        window.MultiGameEngine.elements.player4Score.textContent = player.addScore();
                         break;
                     }
                 //   if(player.score >= self.gameVars.WINNNGSCORE)
@@ -1027,7 +1036,7 @@ window.Game = {
         const player1 = userData.name ||document.getElementById('userName')?.textContent || 'Player 1';
         
         // Initialize the game engine with standard settings
-        window.GameEngine.init({
+        window.MultiGameEngine.init({
             player1: player1,
             player2: 'Player 2',
             player3: 'Player 3',
@@ -1046,8 +1055,8 @@ window.Game = {
 
     // Cleanup function
     cleanup: function() {
-        if (window.GameEngine) {
-            window.GameEngine.cleanup();
+        if (window.MultiGameEngine) {
+            window.MultiGameEngine.cleanup();
         }
     },
 

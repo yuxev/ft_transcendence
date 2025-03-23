@@ -1,12 +1,12 @@
 /* Reset and Base Styles - Scoped to multiplayer-container */
-.multiplayer-container * {
+#multiplayerView * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 /* Apply background only to the container itself */
-.multiplayer-container {
+#multiplayerView {
     margin: 0;
     font-family: 'Roboto', sans-serif;
     color: #fff;
@@ -15,7 +15,7 @@
 }
 
 /* Game Header */
-.multiplayer-container .game-header {
+#multiplayerView .game-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,7 +28,7 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-.multiplayer-container .player-card {
+#multiplayerView .player-card {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -39,27 +39,27 @@
     min-width: 200px;
 }
 
-.multiplayer-container .p1 {
+#multiplayerView .p1 {
     background: linear-gradient(272deg, rgba(255, 255, 255, 0.05), #c70082a1);
     box-shadow: 0 4px 15px rgba(199, 0, 130, 0.2);
 }
 
-.multiplayer-container .p2 {
+#multiplayerView .p2 {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), #03396ceb);
     box-shadow: 0 4px 15px rgba(3, 42, 108, 0.2);
 }
 
-.multiplayer-container .p3 {
+#multiplayerView .p3 {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), #036c36eb);
     box-shadow: 0 4px 15px rgba(3, 42, 108, 0.2);
 }
 
-.multiplayer-container .p4 {
+#multiplayerView .p4 {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), #6c5203eb);
     box-shadow: 0 4px 15px rgba(3, 42, 108, 0.2);
 }
 
-.multiplayer-container .score-display {
+#multiplayerView .score-display {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     padding: 1rem 2rem;
@@ -67,7 +67,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.multiplayer-container .score {
+#multiplayerView .score {
     font-family: 'Orbitron', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
@@ -77,12 +77,12 @@
     align-items: center;
 }
 
-.multiplayer-container .score .separator {
+#multiplayerView .score .separator {
     color: rgba(255, 255, 255, 0.5);
 }
 
 /* Arena Styling */
-.multiplayer-container .arena {
+#multiplayerView .arena {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -95,7 +95,7 @@
     overflow: hidden;
 }
 
-.multiplayer-container .half-line {
+#multiplayerView .half-line {
     position: absolute;
     left: 50%;
     top: 0;
@@ -104,7 +104,7 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
-.multiplayer-container .player {
+#multiplayerView .player {
     position: absolute;
     top: calc(50% - 100px);
     left: 20px;
@@ -115,7 +115,7 @@
     box-shadow: 0 0 20px rgba(199, 0, 130, 0.3);
 }
 
-.multiplayer-container .ball {
+#multiplayerView .ball {
     position: absolute;
     top: calc(50% - 10px);
     left: calc(50% - 10px);
@@ -127,7 +127,7 @@
 }
 
 /* Return Button */
-.multiplayer-container .return-button {
+#multiplayerView .return-button {
     background: linear-gradient(45deg, #c70082a1 0%, #032a6ceb 100%);
     color: white;
     border: none;
@@ -144,20 +144,20 @@
     transition: all 0.3s ease;
 }
 
-.multiplayer-container .return-button:hover {
+#multiplayerView .return-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(199, 0, 130, 0.3);
 }
 
 /* Responsive Design - Fix positioning and flexibility */
 @media (max-width: 1024px) {
-    .multiplayer-container .arena {
+    #multiplayerView .arena {
         width: 100%;
         max-width: 800px;
     }
     
     /* Center the arena */
-    .multiplayer-container {
+    #multiplayerView {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -165,81 +165,81 @@
 }
 
 @media (max-width: 768px) {
-    .multiplayer-container {
+    #multiplayerView {
         padding: 1rem;
     }
     
-    .multiplayer-container .arena {
+    #multiplayerView .arena {
         height: 400px;
         margin: 1rem auto;
     }
     
     /* Adjust player positions for smaller arena */
-    .multiplayer-container .player {
+    #multiplayerView .player {
         height: 160px;
         top: calc(50% - 80px);
     }
     
     /* Adjust player positions */
-    .multiplayer-container .player:nth-child(1) {
+    #multiplayerView .player:nth-child(1) {
         left: 20px;
     }
     
-    .multiplayer-container .player:nth-child(2) {
+    #multiplayerView .player:nth-child(2) {
         right: 20px;
         left: auto;
     }
     
     /* Ensure ball stays centered */
-    .multiplayer-container .ball {
+    #multiplayerView .ball {
         top: calc(50% - 10px);
         left: calc(50% - 10px);
     }
 }
 
 @media (max-width: 480px) {
-    .multiplayer-container {
+    #multiplayerView {
         padding: 0.5rem;
     }
     
-    .multiplayer-container .arena {
+    #multiplayerView .arena {
         height: 300px;
     }
     
-    .multiplayer-container .player {
+    #multiplayerView .player {
         height: 120px;
         top: calc(50% - 60px);
     }
     
-    .multiplayer-container .game-header {
+    #multiplayerView .game-header {
         padding: 0.5rem;
         margin-bottom: 0.5rem;
     }
     
-    .multiplayer-container .player-card {
+    #multiplayerView .player-card {
         padding: 0.5rem 1rem;
     }
 }
 
 /* Add styles to distinguish player1 and player2 */
-.multiplayer-container .player1 {
+#multiplayerView .player1 {
     background: #c70082a1; /* Pink gradient for player 1 */
 }
 
-.multiplayer-container .player2 {
+#multiplayerView .player2 {
     background: #036c54eb; /* Blue gradient for player 2 */
 }
 
-.multiplayer-container .player3 {
+#multiplayerView .player3 {
     background: #c70082a1; /* Pink gradient for player 1 */
 }
 
-.multiplayer-container .player4 {
+#multiplayerView .player4 {
     background: #036c54eb; /* Blue gradient for player 2 */
 }
 
 /* Game Start Screen */
-.multiplayer-container .start-screen {
+#multiplayerView .start-screen {
     position: absolute;
     top: 0;
     left: 0;
@@ -253,7 +253,7 @@
     border-radius: 25px;
 }
 
-.multiplayer-container .start-message {
+#multiplayerView .start-message {
     text-align: center;
     padding: 2rem;
     background: rgba(0, 20, 40, 0.8);
@@ -262,7 +262,7 @@
     box-shadow: 0 0 30px rgba(0, 120, 255, 0.3);
 }
 
-.multiplayer-container .start-message h2 {
+#multiplayerView .start-message h2 {
     font-family: 'Orbitron', sans-serif;
     font-size: 2rem;
     margin-bottom: 1rem;
@@ -270,12 +270,12 @@
     text-shadow: 0 0 10px rgba(0, 204, 255, 0.7);
 }
 
-.multiplayer-container .start-message p {
+#multiplayerView .start-message p {
     font-size: 1.2rem;
     color: #fff;
 }
 
-.multiplayer-container .key-highlight {
+#multiplayerView .key-highlight {
     background: rgba(255, 255, 255, 0.2);
     padding: 0.2rem 0.5rem;
     border-radius: 5px;
@@ -285,7 +285,7 @@
 }
 
 /* Countdown */
-.multiplayer-container .countdown {
+#multiplayerView .countdown {
     position: absolute;
     top: 0;
     left: 0;
