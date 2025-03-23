@@ -1,4 +1,5 @@
 var container = document.querySelector(".multiplayer-container");
+// Only create Game if it doesn't exist
 window.GameEngine = {
     
         initialized: false,
@@ -396,8 +397,8 @@ window.GameEngine = {
                 this.y = self.dimensions.ARENA_HEIGHT / 2 - self.dimensions.BALL_SIZE / 2;
                 this.LastTouch = 0;
                 this.speed = 4;
-                this.vectX = this.speed * Math.cos(Math.PI - 0.2);
-                this.vectY = - this.speed * Math.sin(Math.PI - 0.2);
+                this.vectX = this.speed * Math.cos((1 - (Math.random() > 0.5) * 2) * (1 - Math.random() * 2) * self.gameVars.MAX_ANGLE);
+                this.vectY = - this.speed * Math.sin((1 - (Math.random() > 0.5) * 2) * (1 - Math.random() * 2) * self.gameVars.MAX_ANGLE);
                 this.r = self.dimensions.BALL_SIZE;
                 this.element.style.width = this.r;
                 this.element.style.height = this.r;
@@ -528,7 +529,7 @@ window.GameEngine = {
                     // Increase ball speed
                     this.speed *= 1.05;
                     // Set last touch
-                    this.LastTouch = p1.id;
+                    this.LastTouch = p2.id;
                     // Reposition ball to prevent sticking
                     this.x = p2Left - this.r;
                 }
@@ -637,21 +638,22 @@ window.GameEngine = {
                     this.x >= self.dimensions.ARENA_WIDTH + this.r ||
                     this.y >= self.dimensions.ARENA_HEIGHT + this.r ||
                     this.y < -this.r) {
+                    const ang = (1 - (Math.random() > 0.5) * 2) * (1 - Math.random() * 2) * self.gameVars.MAX_ANGLE;
                     switch(this.LastTouch) {
                         case 0:
-                            this.countScore(p1, Math.PI / 7);
+                            this.countScore(p1, ang);
                             break;
                         case 1:
-                            this.countScore(p1, Math.PI / 7);
+                            this.countScore(p1, ang);
                             break;
                         case 2:
-                            this.countScore(p2, Math.PI / 7);
+                            this.countScore(p2, ang);
                             break;
                         case 3:
-                            this.countScore(p3, Math.PI / 7);
+                            this.countScore(p3, ang);
                             break;
                         case 4:
-                            this.countScore(p4, Math.PI / 7);
+                            this.countScore(p4, ang);
                             break;
                         }
                     this.ajustdiff(p1, p2, p3, p4);
@@ -741,8 +743,8 @@ window.GameEngine = {
 
             // Initialize game objects
             this.gameObjects = {
-                p1: new PlayerObj(1),
-                p2: new PlayerObj(2),
+                p1: new PlayerObj(1), // to add ai : p1: new PlayerObj(1, 1),
+                p2: new PlayerObj(2), // to add ai : p2: new PlayerObj(2, 1),
                 p3: new PlayerObj(3),
                 p4: new PlayerObj(4),
                 ball: new BallObj()

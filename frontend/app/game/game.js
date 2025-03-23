@@ -11,6 +11,8 @@ window.GameEngine = {
         MAX_ANGLE: 5 * Math.PI / 12,
         angle: -Math.PI / 7,
         milliseconds: 1000,
+        gameStarted: false,
+        countdownActive: false,
     },
     
     // Game dimensions
@@ -89,6 +91,9 @@ window.GameEngine = {
         
         // Setup controls
         this.setupControls();
+
+        // Setup start screen
+        this.setupStartScreen();
         
         // Mark as initialized
         this.initialized = true;
@@ -110,7 +115,9 @@ window.GameEngine = {
             computerScore: document.querySelector('#score2'),
             player1Name: document.querySelector('#player1Name span'),
             player2Name: document.querySelector('#player2Name span'),
-            finishButton: document.getElementById('finishGame')
+            finishButton: document.getElementById('finishGame'),
+            startScreen: null,
+            countdown: null
         };
         
         // Hide finish button initially
@@ -118,6 +125,85 @@ window.GameEngine = {
             this.elements.finishButton.style.display = 'none';
         }
     },
+
+    setupStartScreen: function() {
+        // Create start screen overlay
+        this.elements.startScreen = document.createElement('div');
+        this.elements.startScreen.className = 'start-screen';
+        this.elements.startScreen.innerHTML = `
+            <div class="start-message">
+                <h2>Ready to Play?</h2>
+                <p>Press <span class="key-highlight">SPACE</span> to start</p>
+            </div>
+        `;
+
+        // Create countdown element (initially hidden)
+        this.elements.countdown = document.createElement('div');
+        this.elements.countdown.className = 'countdown';
+        this.elements.countdown.style.display = 'none';
+
+        // Add to arena
+        if (this.elements.arena) {
+            this.elements.arena.appendChild(this.elements.startScreen);
+            this.elements.arena.appendChild(this.elements.countdown);
+        }
+
+        // Add space key listener
+        this.handlers.startGame = (e) => {
+            if (e.code === 'Space' && !this.gameVars.gameStarted && !this.gameVars.countdownActive) {
+                e.preventDefault(); // Prevent page scrolling
+                this.startCountdown();
+            }
+        };
+
+        document.addEventListener('keydown', this.handlers.startGame);
+    },
+
+    startCountdown: function() {
+        console.log("Starting countdown!"); // Add debug log
+        this.gameVars.countdownActive = true;
+
+        // Hide start screen
+        if (this.elements.startScreen) {
+            this.elements.startScreen.style.display = 'none';
+        }
+
+        // Show countdown
+        if (this.elements.countdown) {
+            this.elements.countdown.style.display = 'flex';
+            this.elements.countdown.textContent = "3"; // Set initial text
+        }
+
+        let count = 3;
+
+        // Start countdown interval
+        const countdownInterval = setInterval(() => {
+            count--;
+            console.log("Countdown:", count); // Add debug log
+
+            if (count >= 0) {
+                // Update countdown display
+                if (this.elements.countdown) {
+                    this.elements.countdown.textContent = count.toString();
+                }
+            } else {
+                // Countdown complete
+                clearInterval(countdownInterval);
+
+                // Hide countdown
+                if (this.elements.countdown) {
+                    this.elements.countdown.style.display = 'none';
+                }
+
+                // Start the game
+                this.gameVars.gameStarted = true;
+                this.gameVars.countdownActive = false;
+
+                console.log("Game started!");
+            }
+        }, 1000);
+    },
+
     
     // Set player names
     setupPlayerNames: function(player1, player2) {
@@ -546,18 +632,22 @@ window.GameEngine = {
         this.handlers.keydown = (event) => {
             if (event.key === 'w') {
                 if (this.gameObjects && this.gameObjects.p1) {
+                    event.preventDefault();
                     this.gameObjects.p1.Move = 1;
                 }
             } else if (event.key === 's') {
                 if (this.gameObjects && this.gameObjects.p1) {
+                    event.preventDefault();
                     this.gameObjects.p1.Move = -1;
                 }
             } else if (event.key === 'ArrowUp') {
                 if (this.gameObjects && this.gameObjects.p2) {
+                    event.preventDefault();
                     this.gameObjects.p2.Move = 1;
                 }
             } else if (event.key === 'ArrowDown') {
                 if (this.gameObjects && this.gameObjects.p2) {
+                    event.preventDefault();
                     this.gameObjects.p2.Move = -1;
                 }
             }
@@ -608,6 +698,13 @@ window.GameEngine = {
         
         // Clear any game elements
         this.clearGameElements();
+
+        if (this.elements) {
+            if (this.elements.startScreen)
+                this.elements.startScreen.remove();
+            if (this.elements.countdown) 
+                this.elements.countdown.remove();
+        }
         
         // Cancel animation frame
         if (this.animationId) {
