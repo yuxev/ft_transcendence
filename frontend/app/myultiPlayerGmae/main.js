@@ -1,9 +1,8 @@
 var container = document.querySelector(".multiplayer-container");
+// Only create Game if it doesn't exist
 window.GameEngine = {
-    
         initialized: false,
         finished: false,
-        handlers: {}, // Initialize the handlers object
 
         // Add game variables
         gameVars: {
@@ -14,8 +13,6 @@ window.GameEngine = {
             aiError: 0,
             // Arenaleft: parseInt(window.getComputedStyle(arena).left),
             MAX_ANGLE: 5 * Math.PI / 12,
-            gameStarted: false,  // Track if game has started
-            countdownActive: false, // Track if countdown is active
             // Add fixed dimensions
         },
         dimensions: {
@@ -32,13 +29,13 @@ window.GameEngine = {
             console.log('Clearing all game elements');
         
         // Remove all players
-        const playerElements = container.querySelectorAll('.arena .player');
+        const playerElements = document.querySelectorAll('.arena .player');
         playerElements.forEach(element => {
             element.remove();
         });
         
         // Remove all balls
-        const ballElements = container.querySelectorAll('.arena .ball');
+        const ballElements = document.querySelectorAll('.arena .ball');
         ballElements.forEach(element => {
             element.remove();
         });
@@ -57,7 +54,7 @@ window.GameEngine = {
         if (options.onGameOver) this.onGameOver = options.onGameOver;
         
         // Make sure required elements exist
-        if (!container.querySelector('.arena')) {
+        if (!document.querySelector('.arena')) {
             console.log('Game elements not ready, waiting...');
             setTimeout(() => this.init(options), 100);
             return;
@@ -92,9 +89,6 @@ window.GameEngine = {
             // Setup controls
             this.setupControls();
 
-            // Setup start screen
-            this.setupStartScreen();
-
             // Mark as initialized
             this.initialized = true;
             
@@ -103,22 +97,21 @@ window.GameEngine = {
 
             return this; // For chaining
         },
+
         getElements: function() {
         this.elements = {
-            player: container.querySelector(".player"),
-            arena: container.querySelector(".arena"),
-            ball: container.querySelector(".ball"),
-            player1Score: container.querySelector('#score1'),
-            player2Score: container.querySelector('#score2'),
-            player3Score: container.querySelector('#score3'),
-            player4Score: container.querySelector('#score4'),
-            player1Name: container.querySelector('#player1Name span'),
-            player2Name: container.querySelector('#player2Name span'),
-            player3Name: container.querySelector('#player3Name span'),
-            player4Name: container.querySelector('#player4Name span'),
-            finishButton: document.getElementById('finishGame'),
-            startScreen: null,
-            countdown: null
+            player: document.querySelector(".player"),
+            arena: document.querySelector(".arena"),
+            ball: document.querySelector(".ball"),
+            player1Score: document.querySelector('#score1'),
+            player2Score: document.querySelector('#score2'),
+            player3Score: document.querySelector('#score3'),
+            player4Score: document.querySelector('#score4'),
+            player1Name: document.querySelector('#player1Name span'),
+            player2Name: document.querySelector('#player2Name span'),
+            player3Name: document.querySelector('#player3Name span'),
+            player4Name: document.querySelector('#player4Name span'),
+            finishButton: document.getElementById('finishGame')
         };
         
         // Hide finish button initially
@@ -366,7 +359,6 @@ window.GameEngine = {
                     return;
 
                     document.addEventListener('keydown', (event) => {
-                        event.preventDefault(); 
                         if (event.key === this.keyUP) {
                             this.Move = -1;
                         } else if (event.key === this.keyDown) {
@@ -375,7 +367,6 @@ window.GameEngine = {
                     });
                 
                     document.addEventListener('keyup', (event) => {
-                        event.preventDefault(); 
                         if (event.key === this.keyUP && this.Move === -1) {
                             this.Move = 0;
                         } else if (event.key === this.keyDown && this.Move === 1) {
@@ -396,8 +387,8 @@ window.GameEngine = {
                 this.y = self.dimensions.ARENA_HEIGHT / 2 - self.dimensions.BALL_SIZE / 2;
                 this.LastTouch = 0;
                 this.speed = 4;
-                this.vectX = this.speed * Math.cos(Math.PI - 0.2);
-                this.vectY = - this.speed * Math.sin(Math.PI - 0.2);
+                this.vectX = this.speed * Math.cos((1 - (Math.random() > 0.5) * 2) * (1 - Math.random() * 2) * self.gameVars.MAX_ANGLE);
+                this.vectY = - this.speed * Math.sin((1 - (Math.random() > 0.5) * 2) * (1 - Math.random() * 2) * self.gameVars.MAX_ANGLE);
                 this.r = self.dimensions.BALL_SIZE;
                 this.element.style.width = this.r;
                 this.element.style.height = this.r;
@@ -460,7 +451,7 @@ window.GameEngine = {
                     this.y = p1Bottom;
                 }
                 
-                if (prevX >= p1Right && this.x < p1Right && 
+                else if (prevX >= p1Right && this.x < p1Right && 
                     Math.abs(ballCenterY - p1CenterY) < self.dimensions.PADDLE_HEIGHT / 2) {
                     // Calculate normalized position on paddle (from -1 to 1)
                     const relativeIntersectY = (p1CenterY - ballCenterY) / (self.dimensions.PADDLE_HEIGHT / 2);
@@ -510,7 +501,7 @@ window.GameEngine = {
                     this.y = p2Bottom;
                 }
                 
-                if (prevX <= p2Left && ballRight >= p2Left && 
+                else if (prevX <= p2Left && ballRight >= p2Left && 
                 ballBottom >= p2Top && ballTop <= p2Bottom) {
                     // Calculate normalized position on paddle (from -1 to 1)
                     const relativeIntersectY = (p2CenterY - ballCenterY) / (self.dimensions.PADDLE_HEIGHT / 2);
@@ -528,7 +519,7 @@ window.GameEngine = {
                     // Increase ball speed
                     this.speed *= 1.05;
                     // Set last touch
-                    this.LastTouch = p1.id;
+                    this.LastTouch = p2.id;
                     // Reposition ball to prevent sticking
                     this.x = p2Left - this.r;
                 }
@@ -637,21 +628,22 @@ window.GameEngine = {
                     this.x >= self.dimensions.ARENA_WIDTH + this.r ||
                     this.y >= self.dimensions.ARENA_HEIGHT + this.r ||
                     this.y < -this.r) {
+                    const ang = (1 - (Math.random() > 0.5) * 2) * (1 - Math.random() * 2) * self.gameVars.MAX_ANGLE
                     switch(this.LastTouch) {
                         case 0:
-                            this.countScore(p1, Math.PI / 7);
+                            this.countScore(p1, ang);
                             break;
                         case 1:
-                            this.countScore(p1, Math.PI / 7);
+                            this.countScore(p1, ang);
                             break;
                         case 2:
-                            this.countScore(p2, Math.PI / 7);
+                            this.countScore(p2, ang);
                             break;
                         case 3:
-                            this.countScore(p3, Math.PI / 7);
+                            this.countScore(p3, ang);
                             break;
                         case 4:
-                            this.countScore(p4, Math.PI / 7);
+                            this.countScore(p4, ang);
                             break;
                         }
                     this.ajustdiff(p1, p2, p3, p4);
@@ -755,27 +747,26 @@ window.GameEngine = {
             player.moveComputer(this.gameObjects.ball);
             }
             else{
-				if(player.zone) player.movePlayerHorizontal();
-				else player.movePlayer();
+            if(player.zone) player.movePlayerHorizontal();
+            else player.movePlayer();
             }
         },
         
         startGameLoop: function() {
         if (!this.initialized) return;
 
-        // Only run game logic if game has started
-        if (this.gameVars.gameStarted) {
-            this.detectType(this.gameObjects.p1);
-            this.detectType(this.gameObjects.p2);
-            this.detectType(this.gameObjects.p3);
-            this.detectType(this.gameObjects.p4);
-            
-            this.gameObjects.ball.moveBall(this.gameObjects.p1, this.gameObjects.p2,
-                this.gameObjects.p3, this.gameObjects.p4);
-        }
-        
-        // Always request next frame
-        this.animationId = requestAnimationFrame(() => this.startGameLoop());
+        // for (const player of this.gameObjects.players) {
+        //     this.detectType(player);
+        // }
+
+        this.detectType(this.gameObjects.p1);
+        this.detectType(this.gameObjects.p2);
+        this.detectType(this.gameObjects.p3);
+        this.detectType(this.gameObjects.p4);
+
+        this.gameObjects.ball.moveBall(this.gameObjects.p1, this.gameObjects.p2,
+            this.gameObjects.p3, this.gameObjects.p4);
+        requestAnimationFrame(() => this.startGameLoop());
         },
         
         setupControls: function() {
@@ -788,84 +779,6 @@ window.GameEngine = {
                     }
                 });
             }
-        },
-        
-        setupStartScreen: function() {
-            // Create start screen overlay
-            this.elements.startScreen = document.createElement('div');
-            this.elements.startScreen.className = 'start-screen';
-            this.elements.startScreen.innerHTML = `
-                <div class="start-message">
-                    <h2>Ready to Play?</h2>
-                    <p>Press <span class="key-highlight">SPACE</span> to start</p>
-                </div>
-            `;
-            
-            // Create countdown element (initially hidden)
-            this.elements.countdown = document.createElement('div');
-            this.elements.countdown.className = 'countdown';
-            this.elements.countdown.style.display = 'none';
-            
-            // Add to arena
-            if (this.elements.arena) {
-                this.elements.arena.appendChild(this.elements.startScreen);
-                this.elements.arena.appendChild(this.elements.countdown);
-            }
-            
-            // Add space key listener
-            this.handlers.startGame = (e) => {
-                if (e.code === 'Space' && !this.gameVars.gameStarted && !this.gameVars.countdownActive) {
-                    e.preventDefault(); // Prevent page scrolling
-                    this.startCountdown();
-                }
-            };
-            
-            document.addEventListener('keydown', this.handlers.startGame);
-        },
-
-        startCountdown: function() {
-            console.log("Starting countdown!"); // Add debug log
-            this.gameVars.countdownActive = true;
-            
-            // Hide start screen
-            if (this.elements.startScreen) {
-                this.elements.startScreen.style.display = 'none';
-            }
-            
-            // Show countdown
-            if (this.elements.countdown) {
-                this.elements.countdown.style.display = 'flex';
-                this.elements.countdown.textContent = "3"; // Set initial text
-            }
-            
-            let count = 3;
-            
-            // Start countdown interval
-            const countdownInterval = setInterval(() => {
-                count--;
-                console.log("Countdown:", count); // Add debug log
-                
-                if (count >= 0) {
-                    // Update countdown display
-                    if (this.elements.countdown) {
-                        this.elements.countdown.textContent = count.toString();
-                    }
-                } else {
-                    // Countdown complete
-                    clearInterval(countdownInterval);
-                    
-                    // Hide countdown
-                    if (this.elements.countdown) {
-                        this.elements.countdown.style.display = 'none';
-                    }
-                    
-                    // Start the game
-                    this.gameVars.gameStarted = true;
-                    this.gameVars.countdownActive = false;
-                    
-                    console.log("Game started!");
-                }
-            }, 1000);
         },
         
         cleanup: function() {
@@ -890,9 +803,6 @@ window.GameEngine = {
         if (this.handlers.keydownEscape) {
             document.removeEventListener('keydown', this.handlers.keydownEscape);
         }
-        if (this.handlers.startGame) {
-            document.removeEventListener('keydown', this.handlers.startGame);
-        }
         if (this.handlers.finish && this.elements && this.elements.finishButton) {
             this.elements.finishButton.removeEventListener('click', this.handlers.finish);
         }
@@ -905,8 +815,6 @@ window.GameEngine = {
             WINNING_SCORE: 5,
             MAX_ANGLE: 5 * Math.PI / 12,
             aiError: 0,
-            gameStarted: false,
-            countdownActive: false,
         };
         
         // Reset flags and references
@@ -915,16 +823,8 @@ window.GameEngine = {
         this.gameObjects = null;
         this.handlers = {};
         
-        // Remove start screen and countdown if they exist
+        // Reset UI elements if they exist
         if (this.elements) {
-            if (this.elements.startScreen) {
-                this.elements.startScreen.remove();
-            }
-            if (this.elements.countdown) {
-                this.elements.countdown.remove();
-            }
-            
-            // Reset other UI elements
             if (this.elements.finishButton) {
                 this.elements.finishButton.style.display = 'none';
             }
@@ -1022,7 +922,7 @@ window.Game = {
         
         // Get player names
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        const player1 = userData.name ||document.getElementById('userName')?.textContent || 'Player 1';
+        const player1 = userData.name || document.getElementById('userName')?.textContent || 'Player 1';
         
         // Initialize the game engine with standard settings
         window.GameEngine.init({
@@ -1057,6 +957,7 @@ window.Game = {
 
 // Export game functions to window
 
+
 window.initializeGame = function() {
     window.Game.init();
 };
@@ -1068,6 +969,3 @@ window.cleanupGame = function() {
 window.resetGame = function() {
     window.Game.reset();
 };
-
-if (window.Game) 
-    window.Game.init();
