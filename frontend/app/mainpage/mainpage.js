@@ -1,12 +1,102 @@
+globalThis.IsAI = 0;
+var Cnt = 0;
+
+var FinishMultGame = document.getElementById("finishMultiGameEngine");
+FinishMultGame.addEventListener('click', ()=>{
+    window.showView && window.showView('home');
+})
+
+function blockUserUntilFilled() {
+    return new Promise((resolve) => {
+        Cnt++;
+        if (Cnt > 1) {
+            resolve();
+            return;
+        }
+
+        const overlay = document.createElement("div");
+        overlay.id = "input-overlay";
+        document.body.appendChild(overlay);
+
+        const container = document.createElement("div");
+        container.id = "input-container";
+
+        // First input for Player 1
+        const input1 = document.createElement("input");
+        input1.type = "text";
+        input1.placeholder = "Enter first name";
+        input1.id = "input1";
+
+        // Second input for Player 2
+        const input2 = document.createElement("input");
+        input2.type = "text";
+        input2.placeholder = "Enter second name";
+        input2.id = "input2";
+
+        // AI Checkbox
+        const aiCheckboxLabel = document.createElement("label");
+        aiCheckboxLabel.textContent = "Play against AI";
+        aiCheckboxLabel.style.marginLeft = "10px";
+
+        const aiCheckbox = document.createElement("input");
+        aiCheckbox.type = "checkbox";
+        aiCheckbox.id = "aiCheckbox";
+        
+        // Toggle AI mode
+        aiCheckbox.addEventListener("change", function () {
+            if (aiCheckbox.checked) {
+                input2.value = "AI Player";
+                globalThis.IsAI = 1;
+                input2.disabled = true;
+            } else {
+                input2.value = "";
+                globalThis.IsAI = 0;
+                input2.disabled = false;
+            }
+        });
+
+        // Finish Button
+        const finishButton = document.createElement("button");
+        finishButton.id = "verify";
+        finishButton.textContent = "Finish";
+
+        container.appendChild(input1);
+        container.appendChild(input2);
+        container.appendChild(aiCheckbox);
+        container.appendChild(aiCheckboxLabel);
+        container.appendChild(finishButton);
+        overlay.appendChild(container);
+
+        function checkInputs() {
+            return input1.value.trim() !== "" && (input2.value.trim() !== "" || aiCheckbox.checked);
+        }
+
+        finishButton.addEventListener("click", function () {
+            if (checkInputs()) {
+                document.getElementById("player1Name").textContent = input1.value;
+                document.getElementById("player2Name").textContent = input2.value;
+                document.body.removeChild(overlay);
+                resolve();
+            } else {
+                alert("Please fill in both names before proceeding.");
+            }
+        });
+    });
+}
+
+
+// Run function to block user
+
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Initializing application...');
     
     // Check authentication
-    // const jwt = localStorage.getItem('jwt');
-    // if (!jwt) {
-    //     window.location.href = '/index.html';
-    //     return;
-    // }
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+        window.location.href = '/index.html';
+        return;
+    }
     
     // Get user data from localStorage
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -29,7 +119,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 startTournamentGame();
             } else {
                 console.log('Restoring regular game...');
-                startGame();
+                blockUserUntilFilled().then(() => {
+                    startGame();  // This will only execute after the promise is resolved
+                });
             }
         } else if (savedView === 'tournament') {
             // Special case for tournament with active match
@@ -113,7 +205,9 @@ function initSpaNavigation() {
             
             // Show corresponding view
             if (viewName === 'game') {
-                startGame();
+                blockUserUntilFilled().then(() => {
+                    startGame();  // This will only execute after the promise is resolved
+                });
             } else if (viewName === 'tournament' && path !== '/tournament/match') {
                 showView('tournament');
             } else {
@@ -132,7 +226,11 @@ function initSpaNavigation() {
         if (viewName === 'space-shooter')
             viewName = 'spaceShooter';
         if (viewName === 'game')
-            startGame();
+        {
+            blockUserUntilFilled().then(() => {
+                startGame();  // This will only execute after the promise is resolved
+            });
+        }
         else if (viewName === 'tournament' && window.location.hash !== '/tournament/match')
             showView('tournament');
         else if (viewName)
@@ -145,12 +243,23 @@ function initSpaNavigation() {
 function showView(viewName) {
     console.log(`Switching to view: ${viewName}`);
     
+    if (document.getElementById("multiGscript"))
+        document.getElementById("multiGscript").remove();
+    if (document.getElementById("spaceShtrScript"))
+    {
+        window.SpaceShooter.cleanup();
+        document.getElementById("spaceShtrScript").remove();
+    }
+
+
     // Clean up previous view if needed
     if (viewName !== 'game' && window.GameEngine)
         window.GameEngine.cleanup();
     
     if (viewName !== 'spaceShooter' && window.SpaceShooter)
         window.SpaceShooter.cleanup();
+    if (viewName !== 'multiplayer' && window.MultiGameEngine)
+        window.MultiGameEngine.cleanup();
     
     // Hide all views
     document.querySelectorAll('.view').forEach(view => {
@@ -190,6 +299,11 @@ function showView(viewName) {
         updateProfileInfo();
     else if (viewName === 'multiplayer')
         LoadMultiPlayerMood();
+    else if (viewName === 'home')
+    {
+        InputsFilled = false;
+        Cnt = 0;
+    }
     
     // Update active state in navigation
     document.querySelectorAll('.spa-link').forEach(link => {
@@ -205,15 +319,18 @@ function showView(viewName) {
 
 function LoadMultiPlayerMood() {
     console.log("Loading multiplayer resources");
-    
+    // window.MultiGameEngine.init();
+    // window.showView && window.showView('multiplayer');
     // Load multiplayer JS
     localStorage.setItem('currentView', 'multiplayer');
-    if (!window.multiplayerInitialized) {
+    // if (!window.MultiGameEngine) {
+    //     alert("hererefff");
         const multipscript = document.createElement('script');
+        multipscript.id = "multiGscript"
         multipscript.src = '../myultiPlayerGmae/main.js';
         multipscript.onload = function() {
             console.log("multiplayer script loaded");
-            window.multiplayerInitialized = true;
+            window.MultiGameEngine.initialized = true;
             
             // Initialize multiplayer after a short delay to ensure DOM is ready
             setTimeout(() => {
@@ -228,16 +345,7 @@ function LoadMultiPlayerMood() {
             }, 100);
         };
         document.body.appendChild(multipscript);
-    } else {
-        // Scripts already loaded, just call the callback
-        if (typeof window.setupmultiplayerDirectly === 'function') {
-            window.setupmultiplayerDirectly();
-        }
-        
-        if (typeof callback === 'function') {
-            setTimeout(callback, 10);
-        }
-    }
+    // }
 }
 
 function updateUserProfile(userData) {
@@ -955,6 +1063,7 @@ function loadSpaceShooterResources(callback) {
     if (!window.SpaceShooter) {
         console.log("Loading Space Shooter JS");
         const spaceShooterScript = document.createElement('script');
+        spaceShooterScript.id = "spaceShtrScript"
         spaceShooterScript.src = '../space-shooter/space-shooter.js';
         spaceShooterScript.onload = function() {
             console.log("Space Shooter script loaded");

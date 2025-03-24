@@ -1,13 +1,5 @@
 var container = document.querySelector(".multiplayer-container");
-var FinishMultGame = document.getElementById("finishMultiGameEngine");
-FinishMultGame.addEventListener('click', ()=>{
-    window.MultiGameEngine.cleanup();
-    window.showView && window.showView('home');
-})
-document.getElementById("multiplayerView").addEventListener('click', ()=>{
-    window.MultiGameEngine.init();
-    window.showView && window.showView('multiplayer');
-})
+
 // Only create Game if it doesn't exist
 window.MultiGameEngine = {
     
@@ -54,6 +46,19 @@ window.MultiGameEngine = {
         });
     },
         
+
+    showWinnerAnimation: function(playerName) {
+        this.elements.startScreen = document.createElement('div');
+        this.elements.startScreen.className = 'start-screen';
+        this.elements.startScreen.innerHTML = `
+            <div class="start-message">
+                <h2>Game Over!</h2>
+                <p>Winner is <span class="key-highlight">${playerName}</span></p>
+            </div>
+        `;
+        this.elements.arena.appendChild(this.elements.startScreen);
+    },
+
     init: function(options = {}) {
             console.log('Initializing game engine...');
 
@@ -126,15 +131,15 @@ window.MultiGameEngine = {
             player2Name: container.querySelector('#player2Name span'),
             player3Name: container.querySelector('#player3Name span'),
             player4Name: container.querySelector('#player4Name span'),
-            finishButton: document.getElementById('finishGame'),
+            finishButton: document.getElementById("finishMultiGameEngine"),
             startScreen: null,
             countdown: null
         };
         
         // Hide finish button initially
-        if (this.elements.finishButton) {
-            this.elements.finishButton.style.display = 'none';
-        }
+        // if (this.elements.finishButton) {
+        //     this.elements.finishButton.style.display = 'none';
+        // }
         },
         
         setupPlayerNames: function(player1, player2, player3, player4) {
@@ -145,9 +150,6 @@ window.MultiGameEngine = {
 
         if (this.elements.player1Name) {
             this.elements.player1Name.innerHTML = '';
-            const p1Icon = document.createElement('i');
-            p1Icon.className = 'fas fa-user';
-            this.elements.player1Name.appendChild(p1Icon);
             
             const p1Text = document.createElement('span');
             p1Text.textContent = player1 || 'Player 1';
@@ -156,9 +158,6 @@ window.MultiGameEngine = {
         
         if (this.elements.player2Name) {
             this.elements.player2Name.innerHTML = '';
-            const p2Icon = document.createElement('i');
-            p2Icon.className = 'fas fa-user';
-            this.elements.player2Name.appendChild(p2Icon);
             
             const p2Text = document.createElement('span');
             p2Text.textContent = player2 || 'Player 2';
@@ -166,19 +165,13 @@ window.MultiGameEngine = {
         }
         if (this.elements.player3Name) {
             this.elements.player3Name.innerHTML = '';
-            const p3Icon = document.createElement('i');
-            p3Icon.className = 'fas fa-user';
-            this.elements.player3Name.appendChild(p3Icon);
-            
+
             const p3Text = document.createElement('span');
             p3Text.textContent = player3 || 'Player 3';
             this.elements.player3Name.appendChild(p3Text);
         }
         if (this.elements.player4Name) {
             this.elements.player4Name.innerHTML = '';
-            const p4Icon = document.createElement('i');
-            p4Icon.className = 'fas fa-user';
-            this.elements.player4Name.appendChild(p4Icon);
             
             const p4Text = document.createElement('span');
             p4Text.textContent = player4 || 'Player 4';
@@ -697,7 +690,7 @@ window.MultiGameEngine = {
                             score: `${p1.score}-${p2.score}-${p3.score}-${p4.score}`
                         }));
                             
-                        const finishButton = document.getElementById('finishGame');
+                        const finishButton = document.getElementById('finishMultiGameEngine');
                         if (finishButton) {
                             finishButton.style.display = 'flex';
                         }
@@ -790,12 +783,12 @@ window.MultiGameEngine = {
         },
         
         setupControls: function() {
-            const finishButton = document.getElementById('finishGame');
+            const finishButton = document.getElementById('finishMultiGameEngine');
             if (finishButton) {
                 finishButton.addEventListener('click', () => {
                     if (this.finished) {
                         this.cleanup();
-                        window.router.navigate('/tournament');
+                        window.router.navigate('/home');
                     }
                 });
             }
@@ -936,9 +929,9 @@ window.MultiGameEngine = {
             }
             
             // Reset other UI elements
-            if (this.elements.finishButton) {
-                this.elements.finishButton.style.display = 'none';
-            }
+            // if (this.elements.finishButton) {
+            //     this.elements.finishButton.style.display = 'none';
+            // }
             if (this.elements.player2Score) {
                 this.elements.player2Score.textContent = '0';
             }
@@ -951,11 +944,11 @@ window.MultiGameEngine = {
             if (this.elements.player4Score) {
                 this.elements.player1Score.textContent = '0';
             }
-            
+            this.initialized
             // Reset player name elements to prevent duplication
             if (this.elements.player1Name) {
                 this.elements.player1Name.innerHTML = '<i class="fas fa-user"></i><span>Player 1</span>';
-            }
+            } 
             if (this.elements.player2Name) {
                 this.elements.player2Name.innerHTML = '<i class="fas fa-user"></i><span>Player 2</span>';
             }
@@ -992,9 +985,6 @@ window.MultiGameEngine = {
         
         // Reset UI elements if they exist
         if (this.elements) {
-            if (this.elements.finishButton) {
-                this.elements.finishButton.style.display = 'none';
-            }
             if (this.elements.player2Score) {
                 this.elements.player2Score.textContent = '0';
             }

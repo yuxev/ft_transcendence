@@ -3,6 +3,8 @@ window.addEventListener('keydown', (e)=> {
     if (e.key == 'r' && localStorage.getItem('currentView') == 'tournament')
         e.preventDefault();
 })
+
+
 const Tournament = {
     // Tournament state
     state: {
@@ -425,6 +427,8 @@ const Tournament = {
                     
                     // Initialize game directly if GameEngine exists
                     if (window.GameEngine) {
+                        alert("waajmii raa l gim wajda => " + globalThis.IsAI);
+                        globalThis.IsAI = 0;
                         window.GameEngine.init({
                             player1: nextMatch.player1,
                             player2: nextMatch.player2,
@@ -495,6 +499,8 @@ const Tournament = {
     
     // Initialize the game with tournament settings
     initializeTournamentGame: function(match) {
+        alert("waajmii raa l gim wajda => " + globalThis.IsAI);
+        globalThis.IsAI = 0;
         // Initialize game engine with tournament settings
         window.GameEngine.init({
             player1: match.player1,

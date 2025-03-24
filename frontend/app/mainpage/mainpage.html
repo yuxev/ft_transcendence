@@ -527,7 +527,7 @@
     </div>
 
     <!-- Multiplayer mood -->
-    <div id="multiplayerView" class="multiplayer-container" style="display: none">
+    <div id="multiplayerView" class="multiplayer-container view" style="display: none">
       <div class="game-header">
         <div class="player-card p1" id="player1Name">
           <i class="fas fa-user"></i>
@@ -569,9 +569,9 @@
         <div class="half-line"></div>
       </div>
 
-      <button id="finishGame" class="return-button">
+      <button id="finishMultiGameEngine" class="return-button">
         <i class="fas fa-trophy"></i>
-        Return to Tournament
+        Return to Home
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
@@ -580,8 +580,6 @@
     <script>
       window.addEventListener("beforeunload", (event) => {
         localStorage.setItem("currentView", "home");
-        // event.preventDefault();
-        // event.returnValue = '';
       });
       // Direct tournament interactivity test
       document.addEventListener("DOMContentLoaded", function () {

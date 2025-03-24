@@ -3,6 +3,7 @@ window.addEventListener('keydown', (e)=>{
     e.preventDefault();
 })
 
+
 // PONG Game Core Engine
 window.GameEngine = {
     initialized: false,
@@ -101,7 +102,7 @@ window.GameEngine = {
         if (this.elements.computerScore) this.elements.computerScore.textContent = '0';
         
         // Setup player names
-        this.setupPlayerNames(options.player1, options.player2);
+        this.setupPlayerNames(document.getElementById("player1Name").textContent, document.getElementById("player2Name").textContent);
         
         // Initialize game objects
         this.setupGameObjects();
@@ -285,7 +286,7 @@ window.GameEngine = {
             height: paddleHeight,
             score: 0,
             Move: 0,
-            isComputer: 1,
+            isComputer: 0,
             errMargin: 50,
             thikingTime: Date.now(),
             goal: this.dimensions.arenaHeight / 2,
@@ -344,7 +345,7 @@ window.GameEngine = {
             height: paddleHeight,
             score: 0,
             Move: 0,
-            isComputer: 1,
+            isComputer: globalThis.IsAI,
             errMargin: 50,
             thikingTime: Date.now(),
             goal: this.dimensions.arenaHeight / 2,
@@ -458,7 +459,7 @@ window.GameEngine = {
                     this.y = p1Bottom;
                 }
                 
-                if (prevX >= p1Right && this.x < p1Right && 
+                else if (prevX >= p1Right && this.x < p1Right && 
                     ballBottom >= p1Top && ballTop <= p1Bottom) {
                     // Calculate normalized position on paddle (from -1 to 1)
                     const relativeIntersectY = (p1CenterY - ballCenterY) / (window.GameEngine.dimensions.paddleHeight / 2);
@@ -504,7 +505,7 @@ window.GameEngine = {
                     this.y = p2Bottom;
                 }
                 
-                if (prevX <= p2Left && ballRight >= p2Left && 
+                else if (prevX <= p2Left && ballRight >= p2Left && 
                 ballBottom >= p2Top && ballTop <= p2Bottom) {
                     // Calculate normalized position on paddle (from -1 to 1)
                     const relativeIntersectY = (p2CenterY - ballCenterY) / (window.GameEngine.dimensions.paddleHeight / 2);
@@ -544,11 +545,11 @@ window.GameEngine = {
                 }
 
                 // Wall collision (top and bottom)
-                if (ballTop < -2 || ballBottom >= arenaHeight) {
+                if (this.y < -2 || this.y + ballSize >= arenaHeight) {
                     this.dy = -this.dy; // Reverse vertical direction
-                    // if(this.y <= 0)
-                    //     this.y = ballSize;
-                    if(ballBottom >= arenaHeight)
+                    if(this.y <= 0)
+                        this.y = prevY;
+                    if(this.y + ballSize >= arenaHeight)
                         this.y =  arenaHeight - ballSize;
                 }
                 
@@ -643,12 +644,10 @@ window.GameEngine = {
         this.handlers.keydown = (event) => {
             if (event.key === 'w') {
                 if (this.gameObjects && this.gameObjects.p1) {
-                    event.preventDefault();
                     this.gameObjects.p1.Move = 1;
                 }
             } else if (event.key === 's') {
                 if (this.gameObjects && this.gameObjects.p1) {
-                    event.preventDefault();
                     this.gameObjects.p1.Move = -1;
                 }
             } else if (event.key === 'ArrowUp') {
@@ -755,23 +754,18 @@ window.GameEngine = {
         
         // Reset UI elements if they exist
         if (this.elements) {
-            if (this.elements.finishButton) {
+            if (this.elements.finishButton)
                 this.elements.finishButton.style.display = 'none';
-            }
-            if (this.elements.playerScore) {
+            if (this.elements.playerScore)
                 this.elements.playerScore.textContent = '0';
-            }
-            if (this.elements.computerScore) {
+            if (this.elements.computerScore)
                 this.elements.computerScore.textContent = '0';
-            }
             
             // Reset player name elements to prevent duplication
-            if (this.elements.player1Name) {
+            if (this.elements.player1Name)
                 this.elements.player1Name.innerHTML = '<i class="fas fa-user"></i><span>Player 1</span>';
-            }
-            if (this.elements.player2Name) {
+            if (this.elements.player2Name)
                 this.elements.player2Name.innerHTML = '<i class="fas fa-user"></i><span>Player 2</span>';
-            }
         }
     },
     
