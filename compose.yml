@@ -29,9 +29,7 @@ services:
             transcendence_network:
         ports:
             - 8000:8000/tcp
-        env_file:
-          - path: .env
-            required: true
+        env_file: .env
         command: >
             sh -c "python manage.py migrate &&
             gunicorn auth.wsgi:application --bind 0.0.0.0:8000"
