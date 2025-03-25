@@ -3,6 +3,8 @@ window.addEventListener('keydown', (e)=> {
     if (e.key == 'r' && localStorage.getItem('currentView') == 'tournament')
         e.preventDefault();
 })
+
+
 const Tournament = {
     // Tournament state
     state: {
@@ -485,6 +487,7 @@ const Tournament = {
         // Load game resources
         if (!window.GameEngine) {
             const script = document.createElement('script');
+            gameScript.id = "UpldgameScript"
             script.src = '../game/game.js';
             script.onload = () => this.initializeTournamentGame(match);
             document.body.appendChild(script);
@@ -495,6 +498,7 @@ const Tournament = {
     
     // Initialize the game with tournament settings
     initializeTournamentGame: function(match) {
+        globalThis.IsAI = 0;
         // Initialize game engine with tournament settings
         window.GameEngine.init({
             player1: match.player1,
@@ -689,7 +693,7 @@ const Tournament = {
                     document.querySelector('.tournament-container').classList.add('show');
                     
                     // Update start button visibility
-                    const hasNextMatch = this.hasNextMatch();
+                    const hasNextMatch = this.hasNextMatch;
                     document.querySelector('.start-button').style.display = hasNextMatch ? 'block' : 'none';
                     
                     // Set active step to bracket view

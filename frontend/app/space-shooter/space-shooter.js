@@ -3,6 +3,7 @@ window.addEventListener('keydown', (e)=> {
     if (e.key == 'r' && localStorage.getItem('currentView') == 'spaceShooter')
         e.preventDefault();
 })
+
 window.SpaceShooter = {
     init: function() {
         console.log("Initializing Space Shooter game");
@@ -106,7 +107,7 @@ window.SpaceShooter = {
                 gameLoopStarted = true;
             }
         }
-        
+
         function startMultiplayerGame() {
             // Create two players
             player1 = new Player(1);
@@ -211,7 +212,6 @@ window.SpaceShooter = {
                     const bulletColor = this.playerNum === 1 ? "#00ccff" : "#ffcc00";
                     bullets.push(new Bullet(this.x + this.width / 2 - 1.5, this.y, bulletColor, this.playerNum));
                     createExplosion(this.x + this.width / 2, this.y, bulletColor, 5);
-                    soundManager.play('shoot');
                     lastShotTime = Date.now();
                     return true;
                 }
@@ -587,13 +587,11 @@ window.SpaceShooter = {
                     player1.hp--;
                     document.getElementById("p1hp").textContent = player1.hp;
                     createExplosion(bomb.x + bomb.size / 2, bomb.y + bomb.size / 2, "#ff5555", 30);
-                    soundManager.play('explosion');
                     bombs.splice(i, 1);
                     i--;
                     
                     if (player1.hp <= 0) {
                         createExplosion(player1.x + player1.width / 2, player1.y + player1.height / 2, "#4a89dc", 50);
-                        soundManager.play('explosion');
                         player1.active = false;
                         
                         // Check if game is over
@@ -616,13 +614,11 @@ window.SpaceShooter = {
                     player2.hp--;
                     document.getElementById("p2hp").textContent = player2.hp;
                     createExplosion(bomb.x + bomb.size / 2, bomb.y + bomb.size / 2, "#ff5555", 30);
-                    soundManager.play('explosion');
                     bombs.splice(i, 1);
                     i--;
                     
                     if (player2.hp <= 0) {
                         createExplosion(player2.x + player2.width / 2, player2.y + player2.height / 2, "#ff5555", 50);
-                        soundManager.play('explosion');
                         player2.active = false;
                         
                         // Check if game is over
@@ -655,7 +651,6 @@ window.SpaceShooter = {
                     ) {
                         bulletPlayerNum = bullets[j].playerNum;
                         createExplosion(bomb.x + bomb.size / 2, bomb.y + bomb.size / 2, "#ffcc00", 20);
-                        soundManager.play('explosion');
                         bullets.splice(j, 1);
                         hitByBullet = true;
                         break;
@@ -699,7 +694,6 @@ window.SpaceShooter = {
                     }
                     
                     createExplosion(powerUp.x + powerUp.size / 2, powerUp.y + powerUp.size / 2, powerUp.color, 15);
-                    soundManager.play('powerup');
                     powerUps.splice(i, 1);
                     i--;
                     continue;
@@ -722,7 +716,6 @@ window.SpaceShooter = {
                     }
                     
                     createExplosion(powerUp.x + powerUp.size / 2, powerUp.y + powerUp.size / 2, powerUp.color, 15);
-                    soundManager.play('powerup');
                     powerUps.splice(i, 1);
                     i--;
                     continue;
@@ -870,46 +863,11 @@ window.SpaceShooter = {
         // Call this at the end of init to show game mode selection
         showGameModeSelection();
 
-        // Add this before the game variables section
-        class SoundManager {
-            constructor() {
-                this.sounds = {
-                    shoot: new Audio('https://assets.mixkit.co/active_storage/sfx/1670/1670-preview.mp3'),
-                    explosion: new Audio('https://assets.mixkit.co/active_storage/sfx/2771/2771-preview.mp3'),
-                    powerup: new Audio('https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3')
-                };
-                this.muted = false;
-            }
-
-            play(soundName) {
-                if (!this.muted && this.sounds[soundName]) {
-                    // Clone the audio to allow multiple simultaneous plays
-                    const sound = this.sounds[soundName].cloneNode();
-                    sound.volume = 0.3; // Adjust volume as needed
-                    sound.play();
-                }
-            }
-
-            toggleMute() {
-                this.muted = !this.muted;
-                document.getElementById('soundIcon').style.opacity = this.muted ? '0.5' : '1';
-            }
-        }
-
-        // Add this right after creating game variables
-        const soundManager = new SoundManager();
-
-        // Add sound toggle event listener after other event listeners
-        document.getElementById('soundToggle').addEventListener('click', () => {
-            soundManager.toggleMute();
-        });
-
         // Modify the gameOver function to handle multiplayer mode
         function gameOver() {
             gameActive = false;
             
             if (isMultiplayerMode) {
-                // In multiplayer mode, switch to the next player
                 setTimeout(switchPlayer, 2000); // Give a short delay to see the game over screen
             } else {
                 // In single player mode, show game over screen and save history
@@ -977,9 +935,6 @@ window.SpaceShooter = {
             document.getElementById('multiplayerHUD').style.display = 'none';
             document.getElementById('winnerPanel').style.display = 'none';
             window.SpaceShooter.cleanup();
-            // startMultiplayerGame();
-            // document.getElementById("restartGameBtn").click();
-            // resetGame();
         });
         
         function update() {
@@ -995,7 +950,6 @@ window.SpaceShooter = {
             if (keys.shoot && Date.now() - lastShotTime > shotDelay) {
                 bullets.push(new Bullet(player.x + player.width / 2 - 1.5, player.y));
                 createExplosion(player.x + player.width / 2, player.y, "#00ccff", 5);
-                soundManager.play('shoot');
                 lastShotTime = Date.now();
             }
             
@@ -1023,13 +977,11 @@ window.SpaceShooter = {
                     player.hp--;
                     document.getElementById("hp").textContent = player.hp;
                     createExplosion(bomb.x + bomb.size / 2, bomb.y + bomb.size / 2, "#ff5555", 30);
-                    soundManager.play('explosion');
                     bombs.splice(i, 1);
                     i--;
                     
                     if (player.hp <= 0) {
                         createExplosion(player.x + player.width / 2, player.y + player.height / 2, "#4a89dc", 50);
-                        soundManager.play('explosion');
                         gameOver();
                     }
                     continue;
@@ -1053,7 +1005,6 @@ window.SpaceShooter = {
                         bullet.y + bullet.height / 2 < bomb.y + bomb.size
                     ) {
                         createExplosion(bomb.x + bomb.size / 2, bomb.y + bomb.size / 2, "#ff5555", 20);
-                        soundManager.play('explosion');
                         hitByBullet = true;
                         bullets.splice(j, 1);
                         j--;
@@ -1089,12 +1040,10 @@ window.SpaceShooter = {
                     if (powerUp.type === "hp") {
                         player.hp++;
                         createExplosion(powerUp.x + powerUp.size / 2, powerUp.y + powerUp.size / 2, "#00ff00", 15);
-                        soundManager.play('powerup');
                     }
                     if (powerUp.type === "fast") {
                         shotDelay = 100;
                         createExplosion(powerUp.x + powerUp.size / 2, powerUp.y + powerUp.size / 2, "#ff00ff", 15);
-                        soundManager.play('powerup');
                         setTimeout(() => shotDelay = 300, 5000);
                     }
                     document.getElementById("hp").textContent = player.hp;

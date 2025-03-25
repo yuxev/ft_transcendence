@@ -380,12 +380,6 @@
               <h2>GAME OVER</h2>
               <button class="game-btn" id="restartBtn">Play Again</button>
             </div>
-            <div class="sound-toggle" id="soundToggle">
-              <img
-                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMThjLTMuMzEzIDAtNi0yLjY4Ny02LTZzMi42ODctNiA2LTYgNiAyLjY4NyA2IDYtMi42ODcgNi02IDZ6Ii8+PC9zdmc+"
-                id="soundIcon"
-              />
-            </div>
 
             <!-- Game History Panel -->
             <div
@@ -527,7 +521,7 @@
     </div>
 
     <!-- Multiplayer mood -->
-    <div id="multiplayerView" class="multiplayer-container" style="display: none">
+    <div id="multiplayerView" class="multiplayer-container view" style="display: none">
       <div class="game-header">
         <div class="player-card p1" id="player1Name">
           <i class="fas fa-user"></i>
@@ -569,9 +563,9 @@
         <div class="half-line"></div>
       </div>
 
-      <button id="finishGame" class="return-button">
+      <button id="finishMultiGameEngine" class="return-button">
         <i class="fas fa-trophy"></i>
-        Return to Tournament
+        Return to Home
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
@@ -580,8 +574,6 @@
     <script>
       window.addEventListener("beforeunload", (event) => {
         localStorage.setItem("currentView", "home");
-        // event.preventDefault();
-        // event.returnValue = '';
       });
       // Direct tournament interactivity test
       document.addEventListener("DOMContentLoaded", function () {
