@@ -164,8 +164,8 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://localhost",
-    "https://127.0.0.1",
+    "http://localhos",
+    "http://127.0.0.1",
 ]
 
 # Update OAuth settings to use environment variables
@@ -178,13 +178,3 @@ OAUTH42_TOKEN_URL = os.getenv('OAUTH42_TOKEN_URL', 'https://api.intra.42.fr/oaut
 # Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
-# Ensure Django recognizes it is behind a secure proxy
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# # Force all requests to be HTTPS
-# SECURE_SSL_REDIRECT = True
-
-# USE_X_FORWARDED_HOST = True
-# USE_X_FORWARDED_PORT = True

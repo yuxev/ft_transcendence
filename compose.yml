@@ -12,7 +12,7 @@ services:
         networks:
             transcendence_network:
         ports:
-            - 443:443/tcp
+            - 3000:3000/tcp
         restart: always
         depends_on:
             backend:
@@ -32,7 +32,7 @@ services:
         env_file: .env
         command: >
             sh -c "python manage.py migrate &&
-            gunicorn auth.wsgi:application --bind 0.0.0.0:8000 --forwarded-allow-ips=* --proxy-allow-from=*"
+            gunicorn auth.wsgi:application --bind 0.0.0.0:8000"
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8000/admin"]
             interval: 10s
