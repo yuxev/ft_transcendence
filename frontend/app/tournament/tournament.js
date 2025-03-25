@@ -38,6 +38,9 @@ const Tournament = {
         
         // Update UI based on current state
         this.updateUI();
+        
+        // Apply translations if I18n exists
+        this.applyTranslations();
     },
     
     // Attach all event listeners
@@ -170,6 +173,9 @@ const Tournament = {
         // Save tournament state
         this.saveState();
         
+        // Apply translations
+        this.applyTranslations();
+        
         console.log("Tournament generated with players:", this.state.players);
     },
     
@@ -208,87 +214,87 @@ const Tournament = {
         this.state.rounds.push(firstRound);
     },
     
-    // Show the bracket in the UI
+    // Show tournament bracket
     showBracket: function() {
         const bracket = document.getElementById('tournament-bracket');
         if (!bracket) return;
         
         bracket.innerHTML = '';
         
-        // Create rounds
+        // Create bracket visualization
         this.state.rounds.forEach((round, roundIndex) => {
             const roundDiv = document.createElement('div');
             roundDiv.className = 'round';
             
+            // Round title
             const roundHeader = document.createElement('div');
             roundHeader.className = 'round-header';
-            roundHeader.textContent = round.name;
-            roundDiv.appendChild(roundHeader);
             
-            // Special highlight for final round
-            if (round.matches.length === 1 && roundIndex === this.state.rounds.length - 1) {
+            // Check for final rounds and use appropriate titles
+            let roundName = round.name;
+            if (roundIndex === this.state.rounds.length - 1) {
+                roundHeader.setAttribute('data-i18n', 'tournament.finalRound');
+                roundName = window.I18n ? window.I18n.t('tournament.finalRound') : 'Final Round';
                 roundDiv.classList.add('final-round');
-                roundHeader.textContent = 'Final';
+            } else if (roundIndex === this.state.rounds.length - 2) {
+                roundHeader.setAttribute('data-i18n', 'tournament.semifinal');
+                roundName = window.I18n ? window.I18n.t('tournament.semifinal') : 'Semifinal';
+            } else if (roundIndex === this.state.rounds.length - 3) {
+                roundHeader.setAttribute('data-i18n', 'tournament.quarterfinal');
+                roundName = window.I18n ? window.I18n.t('tournament.quarterfinal') : 'Quarterfinal';
             }
+            
+            roundHeader.textContent = roundName;
+            roundDiv.appendChild(roundHeader);
             
             // Create matches
             round.matches.forEach(match => {
                 const matchDiv = document.createElement('div');
                 matchDiv.className = 'match';
-                matchDiv.setAttribute('data-match-id', match.id);
+                matchDiv.dataset.matchId = match.id;
                 
-                // Player 1
-                const player1Div = document.createElement('div');
-                player1Div.className = 'match-player';
-                if (match.winner === match.player1) player1Div.classList.add('winner');
-                
-                const player1Name = document.createElement('span');
-                player1Name.className = 'player-name';
-                player1Name.textContent = match.player1;
-                player1Div.appendChild(player1Name);
-                
-                // Player 2
-                const player2Div = document.createElement('div');
-                player2Div.className = 'match-player';
-                if (match.winner === match.player2) player2Div.classList.add('winner');
-                
-                const player2Name = document.createElement('span');
-                player2Name.className = 'player-name';
-                player2Name.textContent = match.player2;
-                player2Div.appendChild(player2Name);
-                
-                // Match status
-                const matchStatus = document.createElement('div');
-                matchStatus.className = 'match-status';
-                
-                if (match.winner) {
-                    matchStatus.classList.add('complete');
-                    matchStatus.innerHTML = `<i class="fas fa-check-circle"></i> ${match.score || 'Complete'}`;
-                } else {
-                    matchStatus.classList.add('pending');
-                    matchStatus.innerHTML = '<i class="fas fa-clock"></i> Pending';
+                // Highlight current match
+                if (match.id === this.state.currentMatchId) {
+                    matchDiv.classList.add('current-match');
                 }
                 
-                // Append all elements to match div
-                matchDiv.appendChild(player1Div);
-                matchDiv.appendChild(player2Div);
-                matchDiv.appendChild(matchStatus);
+                // First player
+                const player1Div = document.createElement('div');
+                player1Div.className = 'player player1';
+                player1Div.textContent = match.player1 || 'TBD';
                 
-                // Add to round
+                // Winner indicator
+                if (match.winner === match.player1) {
+                    player1Div.classList.add('winner');
+                }
+                
+                // Second player
+                const player2Div = document.createElement('div');
+                player2Div.className = 'player player2';
+                player2Div.textContent = match.player2 || 'TBD';
+                
+                // Winner indicator
+                if (match.winner === match.player2) {
+                    player2Div.classList.add('winner');
+                }
+                
+                // Score display
+                const scoreDiv = document.createElement('div');
+                scoreDiv.className = 'match-score';
+                scoreDiv.textContent = match.score || '- : -';
+                
+                // Add elements to match
+                matchDiv.appendChild(player1Div);
+                matchDiv.appendChild(scoreDiv);
+                matchDiv.appendChild(player2Div);
+                
+                // Add match to round
                 roundDiv.appendChild(matchDiv);
             });
             
             // Add round to bracket
             bracket.appendChild(roundDiv);
         });
-        
-        // Special handling for the tournament winner
-        if (this.state.isComplete) {
-            const winner = this.getWinner();
-            if (winner) {
-                this.showWinner(winner);
-            }
-        }
     },
     
     // Check for match results from completed games
@@ -725,6 +731,20 @@ const Tournament = {
                 startButton.style.display = this.state.isComplete ? 'none' : 'block';
             }
         }
+        
+        // Update tournament status
+        const statusElement = document.querySelector('.tournament-status');
+        if (statusElement) {
+            if (this.state.isComplete) {
+                statusElement.textContent = window.I18n ? window.I18n.t('tournament.completed') : 'Completed';
+                statusElement.setAttribute('data-i18n', 'tournament.completed');
+                statusElement.classList.add('completed');
+            } else {
+                statusElement.textContent = window.I18n ? window.I18n.t('tournament.inProgress') : 'In Progress';
+                statusElement.setAttribute('data-i18n', 'tournament.inProgress');
+                statusElement.classList.remove('completed');
+            }
+        }
     },
     
     // Set active step in progress indicator
@@ -885,6 +905,14 @@ const Tournament = {
                 this.state.isComplete = true;
                 this.showWinner(nextRound.matches[0].winner);
             }
+        }
+    },
+    
+    // Apply translations to all elements with data-i18n attributes
+    applyTranslations: function() {
+        if (window.I18n) {
+            console.log("Applying translations to tournament elements");
+            window.I18n.updateUI();
         }
     }
 };

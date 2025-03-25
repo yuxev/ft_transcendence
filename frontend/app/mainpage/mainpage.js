@@ -327,6 +327,12 @@ function LoadMultiPlayerMood() {
             console.log("multiplayer script loaded");
             window.MultiGameEngine.initialized = true;
             
+            // Apply translations
+            if (window.I18n) {
+                console.log("Updating translations for multiplayer view");
+                window.I18n.updateUI();
+            }
+            
             // Initialize multiplayer after a short delay to ensure DOM is ready
             setTimeout(() => {
                 if (typeof window.setupmultiplayerDirectly === 'function') {
@@ -521,6 +527,13 @@ function loadGameResources(callback) {
     // Check if game resources are already loaded - UPDATED CHECK
     if (window.GameEngine && document.getElementById('gameCssLoaded')) {
         console.log("Game resources already loaded");
+        
+        // Apply translations
+        if (window.I18n) {
+            console.log("Updating translations for game view");
+            window.I18n.updateUI();
+        }
+        
         callback();
         return;
     }
@@ -543,10 +556,23 @@ function loadGameResources(callback) {
         gameScript.src = '../game/game.js';
         gameScript.onload = function() {
             console.log("Game script loaded");
+            
+            // Apply translations
+            if (window.I18n) {
+                console.log("Updating translations for game view");
+                window.I18n.updateUI();
+            }
+            
             setTimeout(callback, 100); // Give it time to initialize
         };
         document.body.appendChild(gameScript);
     } else {
+        // Apply translations
+        if (window.I18n) {
+            console.log("Updating translations for game view");
+            window.I18n.updateUI();
+        }
+        
         callback();
     }
 }
@@ -597,6 +623,12 @@ function loadTournamentResources(callback) {
                     window.setupTournamentDirectly();
                 }
                 
+                // Apply translations to all elements with data-i18n attributes
+                if (window.I18n) {
+                    console.log("Updating translations for tournament view");
+                    window.I18n.updateUI();
+                }
+                
                 if (typeof callback === 'function') {
                     callback();
                 }
@@ -607,6 +639,12 @@ function loadTournamentResources(callback) {
         // Scripts already loaded, just call the callback
         if (typeof window.setupTournamentDirectly === 'function') {
             window.setupTournamentDirectly();
+        }
+        
+        // Apply translations to all elements with data-i18n attributes
+        if (window.I18n) {
+            console.log("Updating translations for tournament view");
+            window.I18n.updateUI();
         }
         
         if (typeof callback === 'function') {
@@ -1094,6 +1132,12 @@ function loadSpaceShooterResources(callback) {
                 spaceShooterStyles.media = "all";
             }
             
+            // Apply translations
+            if (window.I18n) {
+                console.log("Updating translations for Space Shooter view");
+                window.I18n.updateUI();
+            }
+            
             setTimeout(callback, 100); // Give it time to initialize
         };
         document.body.appendChild(spaceShooterScript);
@@ -1103,6 +1147,13 @@ function loadSpaceShooterResources(callback) {
         if (document.getElementById('spaceShooterView').style.display === 'block') {
             spaceShooterStyles.media = "all";
         }
+        
+        // Apply translations
+        if (window.I18n) {
+            console.log("Updating translations for Space Shooter view");
+            window.I18n.updateUI();
+        }
+        
         callback();
     }
 }

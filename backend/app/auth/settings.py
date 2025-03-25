@@ -164,8 +164,8 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhos",
-    "http://127.0.0.1",
+    "https://localhost",
+    "https://127.0.0.1",
 ]
 
 # Update OAuth settings to use environment variables
