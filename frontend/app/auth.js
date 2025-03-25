@@ -6,12 +6,17 @@ const registerForm = document.querySelector('.form-box.register form');
 const API_URL = 'http://localhost:8000';
 
 console.log(`Testing connection to backend at ${API_URL}`);
-fetch(`${API_URL}/api/user/is-oauth`, {
+// Changed API endpoint to test which should work without authentication
+fetch(`${API_URL}/api/test`, {
     method: 'GET',
     headers: {},
 })
 .then(response => {
     console.log(`Backend connection test: ${response.status}`);
+    return response.json();
+})
+.then(data => {
+    console.log('Backend API is accessible:', data);
 })
 .catch(error => {
     console.error(`Backend connection failed: ${error.message}`);

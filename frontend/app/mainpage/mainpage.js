@@ -894,14 +894,37 @@ function changePassword() {
 
 // Check if user is an OAuth user and adjust password form accordingly
 function checkOAuthUser() {
+    const jwt = localStorage.getItem('jwt');
+    
+    if (!jwt) {
+        console.error('No JWT token found, cannot check OAuth status');
+        return;
+    }
+
     fetch('http://localhost:8000/api/user/is-oauth', {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+            'Authorization': `Bearer ${jwt}`
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('OAuth check response status:', response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log('OAuth user check response:', data);
+        
+        // Only proceed if user is authenticated
+        if (!data.authenticated) {
+            console.error('User not authenticated for OAuth check, will try again after fetching user info');
+            // Try to refresh user data and token
+            fetchUserInfo().then(() => {
+                console.log('Retrying OAuth check after user info refresh');
+                setTimeout(checkOAuthUser, 1000); // Try again after 1 second
+            });
+            return;
+        }
+        
         const currentPasswordField = document.getElementById('currentPasswordContainer');
         const passwordTitle = document.querySelector('.password-section h3');
         const passwordInstructions = document.getElementById('passwordInstructions');
