@@ -538,9 +538,11 @@ window.GameEngine = {
                     
                     // Check win condition
                     if (p2.score >= window.GameEngine.gameVars.WINNING_SCORE) {
-                        window.GameEngine.showWinnerAnimation(window.GameEngine.elements.player2Name.textContent);
                         window.GameEngine.finished = true;
-                        // window.GameEngine.onGameOver('Player 2', p1.score, p2.score);
+                        if (localStorage.getItem("currentView") == "game")
+                            window.GameEngine.showWinnerAnimation(window.GameEngine.elements.player2Name.textContent);
+                        else
+                            window.GameEngine.onGameOver('Player 2', p1.score, p2.score);
                     }
                 }
 
@@ -564,9 +566,10 @@ window.GameEngine = {
                     // Check win condition
                     if (p1.score >= window.GameEngine.gameVars.WINNING_SCORE) {
                         window.GameEngine.finished = true;
-                        window.GameEngine.showWinnerAnimation(window.GameEngine.elements.player1Name.textContent);
-
-                        // window.GameEngine.onGameOver('Player 1', p1.score, p2.score);
+                        if (localStorage.getItem("currentView") == "game")
+                            window.GameEngine.showWinnerAnimation(window.GameEngine.elements.player1Name.textContent);
+                        else
+                            window.GameEngine.onGameOver('Player 1', p1.score, p2.score);
                     }
                 }
             },

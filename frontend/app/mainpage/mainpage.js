@@ -246,11 +246,9 @@ function showView(viewName) {
     if (document.getElementById("multiGscript"))
         document.getElementById("multiGscript").remove();
     if (document.getElementById("spaceShtrScript"))
-    {
-        window.SpaceShooter.cleanup();
         document.getElementById("spaceShtrScript").remove();
-    }
-
+    if (document.getElementById("UpldgameScript"))
+        document.getElementById("UpldgameScript").remove();
 
     // Clean up previous view if needed
     if (viewName !== 'game' && window.GameEngine)
@@ -300,10 +298,7 @@ function showView(viewName) {
     else if (viewName === 'multiplayer')
         LoadMultiPlayerMood();
     else if (viewName === 'home')
-    {
-        InputsFilled = false;
         Cnt = 0;
-    }
     
     // Update active state in navigation
     document.querySelectorAll('.spa-link').forEach(link => {
@@ -544,6 +539,7 @@ function loadGameResources(callback) {
     if (!window.GameEngine) {
         console.log("Loading game JS");
         const gameScript = document.createElement('script');
+        gameScript.id = "UpldgameScript"
         gameScript.src = '../game/game.js';
         gameScript.onload = function() {
             console.log("Game script loaded");
@@ -573,6 +569,7 @@ function createTournament() {
 
 // Helper function to load tournament resources
 function loadTournamentResources(callback) {
+    globalThis.IsAI = 0;
     console.log("Loading tournament resources");
     
     // Load tournament CSS
@@ -585,8 +582,9 @@ function loadTournamentResources(callback) {
     }
     
     // Load tournament JS
-    if (!window.tournamentInitialized) {
+    if (!window.tournamentInitialized && !document.getElementById("upldtournamentScript")) {
         const tournamentScript = document.createElement('script');
+        tournamentScript.id = "upldtournamentScript"
         tournamentScript.src = '../tournament/tournament.js';
         tournamentScript.onload = function() {
             console.log("Tournament script loaded");
